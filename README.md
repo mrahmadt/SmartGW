@@ -83,7 +83,7 @@ apt install openvpn unzip wget python3-setuptools python3-pip
 python3 -m pip install --upgrade openpyn
 openpyn --init
 openpyn de  -d
-```mkdir -p /etc/sudoers.d/
+mkdir -p /etc/sudoers.d/
 echo '' > /etc/sudoers.d/smartgw
 echo 'www-data ALL=NOPASSWD: /usr/sbin/service' >> /etc/sudoers.d/smartgw
 echo 'www-data ALL=NOPASSWD: /usr/local/bin/openpyn' >> /etc/sudoers.d/smartgw
@@ -107,5 +107,5 @@ chown -R www-data:www-data /var/www/html/smartgw/
 systemctl restart lighttpd.service
 ```
 12. Open your Internet browser and type your server ip with port 8081 (http://Your-Server-IP:8081/ to start adding your domains
-13. Go to www.nordvpn.com and you should see your status "Protected".
+13. Open www.nordvpn.com and you should see your connection status "Protected".
 14. Enjoy!.
