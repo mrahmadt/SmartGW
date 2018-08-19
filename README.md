@@ -1,9 +1,6 @@
 # SmartGW (**BETA**)
 
-SmartGW is a way that allows you to redirect some of your home/office internet web traffic (based on the domain) through a VPN connection. For example, you can set up your youtube traffic to go over your VPN, and all other traffic (e.g., yahoo.com) goes through your local ISP.
-
-## How Does it Work?
-You will install a DNS Server, SNI Proxy and a VPN client in your network, The DNS server (based on the domain) forward your request to the SNI Proxy the traffic will go over your VPN connection.
+SmartGW is a way that allows you to redirect specific internet web traffic from your home/office to go over you VPN connection. For example, you can set up your youtube traffic to go through your VPN, and all other traffic (e.g., yahoo.com) goes through your local ISP.
 
 ## How difficult it's?
 The setup is straightforward, you just need a Linux server in your network with a VPN subscription (below instructions support <a href="http://nordvpn.com">NordVPN</a> for now).
@@ -108,4 +105,5 @@ systemctl restart lighttpd.service
 ```
 12. Open your Internet browser and type your server ip with port 8081 (http://Your-Server-IP:8081/ to start adding your domains
 13. Open www.nordvpn.com and you should see your connection status "Protected".
-14. Enjoy!.
+14. Update your internet router to use your new server ip as the primary DNS server (it should brodcast it as the primary DNS server when assigning a new DHCP IP to your local clients).
+15. Enjoy!.
