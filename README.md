@@ -1,6 +1,6 @@
 # SmartGW
 
-SmartGW is a VPN/DNS Gateway that allows you to redirect specific internet web traffic from your home/office to go over your VPN connection. For example, you can set up your youtube traffic to go through your VPN, and all other traffic (e.g., yahoo.com) goes through your local ISP.
+SmartGW is a VPN/DNS Gateway that allows you to redirect specific internet web data from your home/office to go over your VPN connection. For example, you can set up your youtube traffic to go through your VPN, and all other data (e.g., yahoo.com) goes through your local ISP.
 
 The idea is to setup a dns server with list of domains that you would like the access them over VPN and the dns response will direct them to SNI proxy with VPN connection to request your domain
 
