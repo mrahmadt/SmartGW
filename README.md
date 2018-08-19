@@ -35,7 +35,7 @@ apt-get install sniproxy
 ```
 5. Run below commands (as root) to configure sniproxy.
 ``` bash
-*****  wget sniproxy.conf
+curl https://raw.githubusercontent.com/mrahmadt/SmartGW/master/conf/sniproxy.conf -o /etc/sniproxy.conf
 perl -pi -e 's/^ENABLED=0$/ENABLED=1/g' /etc/default/sniproxy
 perl -pi -e 's/^#DAEMON_ARGS/DAEMON_ARGS/g' /etc/default/sniproxy
 systemctl restart sniproxy
@@ -71,9 +71,9 @@ lighttpd-enable-mod fastcgi-php
 lighttpd-enable-mod rewrite              
 perl -pi -e 's/^server.port\s+=\s+80$/server.port = 8081/g' /etc/lighttpd/lighttpd.conf
 mkdir -p /var/www/html/smartgw
-#lighttpd.conf-smartgw
-#redirect-index.html
-#/var/www/html/smartgw/index.php
+curl https://raw.githubusercontent.com/mrahmadt/SmartGW/master/conf/lighttpd.conf.debian -o /tmp/lighttpd.conf.debian
+cat /tmp/lighttpd.conf.debian >> /etc/lighttpd/lighttpd.conf
+curl https://raw.githubusercontent.com/mrahmadt/SmartGW/master/conf/redirect-index.html -o /var/www/html/index.html
 chown -R www-data:www-data /var/www/html/smartgw/
 systemctl stop lighttpd.service
 systemctl start lighttpd.service
@@ -99,6 +99,7 @@ openpyn --init
 openpyn de  -d
 systemctl enable openpyn
 ```
+11. Download web folder at /var/www/html/smartgw
 12. Open your Internet browser and type your server ip with port 8081 (http://Your-Server-IP:8081/ to start adding your domains
 13. Go to www.nordvpn.com and you should see your status "Protected".
 14. Enjoy!.
