@@ -80,10 +80,6 @@ systemctl enable lighttpd.service
 ```
 9. Setup sudo command for to control our setup from the web gui.
 ``` bash
-apt install openvpn unzip wget python3-setuptools python3-pip
-python3 -m pip install --upgrade openpyn
-openpyn --init
-openpyn de  -d
 mkdir -p /etc/sudoers.d/
 echo '' > /etc/sudoers.d/smartgw
 echo 'www-data ALL=NOPASSWD: /usr/sbin/service' >> /etc/sudoers.d/smartgw
