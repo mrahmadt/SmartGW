@@ -1,4 +1,4 @@
-# SmartGW **BETA**
+# SmartGW (**BETA**)
 
 SmartGW is a way that allows you to redirect some of your home/office internet web traffic (based on the domain) through a VPN connection. For example, you can set up your youtube traffic to go over your VPN, and all other traffic (e.g., yahoo.com) goes through your local ISP.
 
