@@ -1,0 +1,17 @@
+
+
+$HTTP["host"] =~ "smartgw$" {
+    server.document-root = "/var/www/html/smartgw"
+    server.errorlog      = "/var/log/lighttpd/smartgw-error.log"
+    server.error-handler-404 = "/index.php"
+	
+	#$HTTP["url"] =~ "^/\.(.*)" {
+    #	 url.access-deny = ("")
+	#}
+}
+
+# Block . files from being served, such as .git, .github, .gitignore
+$HTTP["url"] =~ "/\.(.*)$" {
+     url.access-deny = ("")
+}
+
