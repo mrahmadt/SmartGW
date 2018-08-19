@@ -70,11 +70,9 @@ lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 lighttpd-enable-mod rewrite              
 perl -pi -e 's/^server.port\s+=\s+80$/server.port = 8081/g' /etc/lighttpd/lighttpd.conf
-mkdir -p /var/www/html/smartgw
 curl https://raw.githubusercontent.com/mrahmadt/SmartGW/master/conf/lighttpd.conf.debian -o /tmp/lighttpd.conf.debian
 cat /tmp/lighttpd.conf.debian >> /etc/lighttpd/lighttpd.conf
 curl https://raw.githubusercontent.com/mrahmadt/SmartGW/master/conf/redirect-index.html -o /var/www/html/index.html
-chown -R www-data:www-data /var/www/html/smartgw/
 systemctl stop lighttpd.service
 systemctl start lighttpd.service
 systemctl enable lighttpd.service
@@ -99,7 +97,15 @@ openpyn --init
 openpyn de  -d
 systemctl enable openpyn
 ```
-11. Download web folder at /var/www/html/smartgw
+11. Clone SmartGW and copy the content of web folder to /var/www/html/smartgw
+``` bash
+git clone https://github.com/mrahmadt/SmartGW.git
+cd SmartGW/
+mkdir -p /var/www/html/smartgw
+cp -r web/* /var/www/html/smartgw
+chown -R www-data:www-data /var/www/html/smartgw/
+systemctl restart lighttpd.service
+```
 12. Open your Internet browser and type your server ip with port 8081 (http://Your-Server-IP:8081/ to start adding your domains
 13. Go to www.nordvpn.com and you should see your status "Protected".
 14. Enjoy!.
