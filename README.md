@@ -12,6 +12,10 @@ The setup is straightforward, you just need a Linux server in your network with 
 * Automatically connect to least busy, low latency VPN servers in a given country.
 * Auto retry and auto-failover to next best VPN server if the connection dies.
 
+![screenshot1](https://user-images.githubusercontent.com/957921/44305203-cfa78500-a37a-11e8-961c-cddea95773d2.png)
+![screenshot2](https://user-images.githubusercontent.com/957921/44305204-d2a27580-a37a-11e8-881e-120f065df056.png)
+![screenshot3](https://user-images.githubusercontent.com/957921/44305205-d46c3900-a37a-11e8-9c87-01e1b24ec4f1.png)
+
 ## What Do I need to start?
 1. You must have a VPN subscription from NordVPN (The method below can work with any VPN provider, but you need to modify the installation script).
 2. A Linux server with a static IP in your local network.
