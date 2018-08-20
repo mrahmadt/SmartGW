@@ -113,7 +113,8 @@ systemctl enable openpyn
 12. Open your browser and type your SmartGW ip (port 8081) (http://Your-Server-IP:8081/) & define which network interface to use.
 13. Define SmartGW IP address as the only DNS entry in the router.
 ```
-Log into your router’s configuration page and find the DHCP/DNS settings. Note: make sure you adjust this setting under your LAN settings and not the WAN.
+Log into your router’s configuration page and find the DHCP/DNS settings. 
+Note: make sure you adjust this setting under your LAN settings and not the WAN.
 ```
 ![6e475c318358d8266052015e28841a72b3cc3b84](https://user-images.githubusercontent.com/957921/44320410-9cccc200-a44a-11e8-88fe-570d01eb2e93.png)
 
