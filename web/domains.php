@@ -8,8 +8,8 @@ if(isset($_GET['delete']) && is_numeric($_GET['delete']) ){
 	exit;
 }
 
-if(isset($_GET['action']) && ($_GET['action']=='UpdateDNSMasqConf') ){
-	UpdateDNSMasqConf();
+if(isset($_GET['action']) && ($_GET['action']=='UpdateDNSMasqDomains') ){
+	UpdateDNSMasqDomains();
 	header('Location: domains.php');
 	exit;
 }
@@ -49,7 +49,7 @@ require_once 'header.php';
 </div>
 <?php echo $Paginator->createLinks( $links, 'pagination justify-content-center' ); ?>
 <b>Important:</b> Note that domains are not automatically deleted on this page to avoid restarting the DNS service too often. instead, click on this button, to have the new settings become effective:
-<a href="domains.php?action=UpdateDNSMasqConf" class="btn btn-info btn-block">Restart my DNS</a>
+<a href="domains.php?action=UpdateDNSMasqDomains" class="btn btn-info btn-block">Restart my DNS</a>
 <?php require_once 'footer.php';?>
 <script>
 $( document ).ready(function() {
