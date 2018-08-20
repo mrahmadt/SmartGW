@@ -94,7 +94,7 @@ systemctl stop lighttpd.service
 systemctl start lighttpd.service
 systemctl enable lighttpd.service
 ```
-10. Setup sudo command for to control our setup from the web gui.
+10. Setup sudo command for SmartGW GUI.
 ``` bash
 mkdir -p /etc/sudoers.d/
 echo '' > /etc/sudoers.d/smartgw
@@ -110,7 +110,7 @@ openpyn --init
 openpyn de  -d
 systemctl enable openpyn
 ```
-12. Open your browser and type your SmartGW ip (port 8081) (http://Your-Server-IP:8081/.
+12. Open your browser and type your SmartGW ip (port 8081) (http://Your-Server-IP:8081/) & define which network interface to use.
 13. Define SmartGW IP address as the only DNS entry in the router.
 ```
 Log into your router’s configuration page and find the DHCP/DNS settings. Note: make sure you adjust this setting under your LAN settings and not the WAN.
