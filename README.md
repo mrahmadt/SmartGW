@@ -3,8 +3,8 @@
 SmartGW is a VPN Gateway/Proxy that allows you to redirect specific internet domains to go through a VPN tunnel while keeping other internet domains to go through your ISP gateway.
 
 **Example:**
-- Your request to netflix.com (from all devices in your network) --> Traffic to netflix.com will go through the VPN tunnel.
-- Your request to youtube.com (from all devices in your network) --> Traffic to youtube.com will go through your ISP.
+- Your request to **netflix.com** (from all devices in your network) --> Traffic to netflix.com will go through the **VPN tunnel**.
+- Your request to **youtube.com** (from all devices in your network) --> Traffic to youtube.com will go through your **ISP gateway**.
 
 **This can help you to:**
 - Access Geo-restricted content.
