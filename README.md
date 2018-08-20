@@ -32,25 +32,31 @@ The setup is straightforward, you just need a Linux server in your network with 
 ## Instructions
 1. Install Linux (the instructions below tested with a fresh installation of Ubuntu Server 18.04).
 2. Set a static IP in your server.
-3. Update Ubuntu repository
+3. Clone SmartGW
+``` bash
+mkdir ~/smartgw-build
+cd ~/smartgw-build
+git clone https://github.com/mrahmadt/SmartGW.git
+```
+4. Update Ubuntu repository
 ``` bash
 add-apt-repository main
 add-apt-repository universe
 apt update
 ```
-4. Install SNIProxy from <a href="https://github.com/dlundquist/sniproxy">https://github.com/dlundquist/sniproxy</a> or using apt-get (Works with Ubuntu Server 18.04)
+5. Install SNIProxy from <a href="https://github.com/dlundquist/sniproxy">https://github.com/dlundquist/sniproxy</a> or using apt-get (Works with Ubuntu Server 18.04)
 ``` bash
 apt-get install sniproxy
 ```
-5. Run below commands (as root) to configure sniproxy.
+6. Run below commands (as root) to configure sniproxy.
 ``` bash
-curl https://raw.githubusercontent.com/mrahmadt/SmartGW/master/conf/sniproxy.conf -o /etc/sniproxy.conf
+cp ~/smartgw-build/SmartGW/conf/sniproxy.conf /etc/sniproxy.conf
 perl -pi -e 's/^ENABLED=0$/ENABLED=1/g' /etc/default/sniproxy
 perl -pi -e 's/^#DAEMON_ARGS/DAEMON_ARGS/g' /etc/default/sniproxy
 systemctl restart sniproxy
 systemctl enable sniproxy
 ```
-6. (Optional) Install squid if you would like to use it a a proxy in any device.
+7. (Optional) Install squid if you would like to use it a a proxy in any device.
 ``` bash
 apt-get install squid
 perl -pi -e 's/^http_access allow localhost$/http_access allow localnet/g' /etc/squid/squid.conf
@@ -60,7 +66,7 @@ echo 'dns_nameservers 8.8.8.8 8.8.4.4' >> /etc/squid/squid.conf
 systemctl restart squid
 systemctl enable squid
 ```
-7. Install and configure DNSMasq.
+8. Install and configure DNSMasq.
 ``` bash
 apt install dnsmasq
 perl -pi -e 's/^#conf-dir=\/etc\/dnsmasq.d\/,\*.conf$/conf-dir=\/etc\/dnsmasq.d\/,\*.conf/g' /etc/dnsmasq.conf
@@ -72,27 +78,21 @@ sudo chown www-data:www-data  /etc/dnsmasq.d/smartgw.conf
 systemctl restart dnsmasq
 systemctl enable dnsmasq
 ```
-8. Install and configure lighttpd with php
+9. Install and configure lighttpd with php
 ``` bash
 apt-get install lighttpd php7.2-common php7.2-cgi php7.2-sqlite3
 lighttpd-enable-mod fastcgi
 lighttpd-enable-mod fastcgi-php
 lighttpd-enable-mod rewrite              
 perl -pi -e 's/^server.port\s+=\s+80$/server.port = 8081/g' /etc/lighttpd/lighttpd.conf
+mkdir -p /var/www/html/smartgw
+cp -r ~/smartgw-build/SmartGW/web/* /var/www/html/smartgw
+cat ~/smartgw-build/SmartGW/conf/lighttpd.conf.debian >> /etc/lighttpd/lighttpd.conf
+cp ~/smartgw-build/SmartGW/conf/redirect-index.html /var/www/html/index.html
+chown -R www-data:www-data /var/www/html/smartgw/
 systemctl stop lighttpd.service
 systemctl start lighttpd.service
 systemctl enable lighttpd.service
-```
-9. Clone SmartGW and copy the content of web folder
-``` bash
-git clone https://github.com/mrahmadt/SmartGW.git
-cd SmartGW/
-mkdir -p /var/www/html/smartgw
-cp -r web/* /var/www/html/smartgw
-cat conf/lighttpd.conf.debian >> /etc/lighttpd/lighttpd.conf
-cp conf/redirect-index.html /var/www/html/index.html
-chown -R www-data:www-data /var/www/html/smartgw/
-systemctl restart lighttpd.service
 ```
 10. Setup sudo command for to control our setup from the web gui.
 ``` bash
