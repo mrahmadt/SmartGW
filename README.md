@@ -51,6 +51,7 @@ apt-get install sniproxy
 6. Run below commands (as root) to configure sniproxy.
 ``` bash
 cp ~/smartgw-build/SmartGW/conf/sniproxy.conf /etc/sniproxy.conf
+chown www-data:www-data /etc/sniproxy.conf
 perl -pi -e 's/^ENABLED=0$/ENABLED=1/g' /etc/default/sniproxy
 perl -pi -e 's/^#DAEMON_ARGS/DAEMON_ARGS/g' /etc/default/sniproxy
 systemctl restart sniproxy
@@ -62,7 +63,10 @@ apt-get install squid
 perl -pi -e 's/^http_access allow localhost$/http_access allow localnet/g' /etc/squid/squid.conf
 perl -pi -e 's/^#acl localnet src/acl localnet src/g' /etc/squid/squid.conf
 echo "shutdown_lifetime 5 seconds" >> /etc/squid/squid.conf
-echo 'dns_nameservers 8.8.8.8 8.8.4.4' >> /etc/squid/squid.conf
+echo "include /etc/squid/smartgw.conf" >> /etc/squid/squid.conf
+touch /etc/squid/smartgw.conf
+chown www-data:www-data /etc/squid/smartgw.conf
+chown www-data:www-data /etc/squid/squid.conf
 systemctl restart squid
 systemctl enable squid
 ```
@@ -70,11 +74,13 @@ systemctl enable squid
 ``` bash
 apt install dnsmasq
 perl -pi -e 's/^#conf-dir=\/etc\/dnsmasq.d\/,\*.conf$/conf-dir=\/etc\/dnsmasq.d\/,\*.conf/g' /etc/dnsmasq.conf
-echo '' > /etc/dnsmasq.d/smartgw.conf
 DEFAULTIP=$(ip route| grep default| awk '{print $3}')
 echo "address=/smartgw/${DEFAULTIP}" >> /etc/dnsmasq.d/smartgw.conf
 echo "address=/nordvpn.com/${DEFAULTIP}" >> /etc/dnsmasq.d/smartgw.conf
-sudo chown www-data:www-data  /etc/dnsmasq.d/smartgw.conf
+echo '' > /etc/dnsmasq.d/smartgw.conf
+echo 'server=208.67.222.222' > /etc/dnsmasq.d/smartgw-servers.conf
+chown www-data:www-data  /etc/dnsmasq.d/smartgw.conf
+chown www-data:www-data  /etc/dnsmasq.d/smartgw-servers.conf
 systemctl restart dnsmasq
 systemctl enable dnsmasq
 ```
