@@ -1,5 +1,6 @@
 <?php
 require_once 'init.php';
+settingsIsOK();
 if(isset($_GET['delete']) && is_numeric($_GET['delete']) ){
 	$db = new SQLite3(DATABASE_FILE);
 	$ret =  $db->exec('DELETE FROM domains WHERE id=' . addslashes($_GET['delete']));

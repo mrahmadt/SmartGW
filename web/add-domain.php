@@ -1,6 +1,6 @@
 <?php
 require_once 'init.php';
-
+settingsIsOK();
 if(isset($_POST['domains']) && $_SERVER['REQUEST_METHOD']  == 'POST'){
 	$domainsPost = explode("\n",$_POST['domains']);
 	$domains = [];

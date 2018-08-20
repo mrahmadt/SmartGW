@@ -3,7 +3,9 @@
 define('WEBDIR',dirname(__FILE__));
 define('DATABASE_FILE',WEBDIR . '/.database.db');
 
-if(!file_exists(DATABASE_FILE)) {createDATABASEFile();}
+if(!file_exists(DATABASE_FILE)) {
+	createDATABASEFile();
+}
 
 function createDATABASEFile(){
 	$sqls = [];
@@ -23,10 +25,23 @@ function createDATABASEFile(){
 		}
 	}
 	$db->close();
-	header('Location: settings.php');
+	header('Location: settings.php?s');
 	exit;
 }
-
+function settingsIsOK(){
+	$db = new SQLite3(DATABASE_FILE);
+	if(!$db) {
+	   echo $db->lastErrorMsg();
+	   exit;
+	}
+	$ipaddress = $db->querySingle( "SELECT value FROM settings WHERE name LIKE 'ipaddress'");
+	$db->close();
+	if($ipaddress==''){
+		header('Location: settings.php?init=1');
+		exit;
+	}
+	return true;
+}
 function UpdateDNSMasqConf(){
 	#/etc/dnsmasq.d/smartgw.conf
 	$db = new SQLite3(DATABASE_FILE);
@@ -37,8 +52,8 @@ function UpdateDNSMasqConf(){
 	$ipaddress = $db->querySingle( "SELECT value FROM settings WHERE name LIKE 'ipaddress'");
 	if($ipaddress!=''){
 		$dnsmasqconf = '';
-		$dnsmasqconf = "address=/smartgw/$ipaddress\n";
-		$dnsmasqconf .= "address=/nordvpn.com/$ipaddress\n";
+		//$dnsmasqconf = "address=/smartgw/$ipaddress\n";
+		//$dnsmasqconf .= "address=/nordvpn.com/$ipaddress\n";
 	    $ret = $db->query( 'SELECT domain FROM domains' );
 	    while ( $row = $ret->fetchArray() ) {
 			$dnsmasqconf .= "address=/".$row['domain']."/$ipaddress\n";
