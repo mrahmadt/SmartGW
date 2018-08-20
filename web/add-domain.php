@@ -34,7 +34,7 @@ if(isset($_POST['domains']) && $_SERVER['REQUEST_METHOD']  == 'POST'){
 	}
     $db->close();
 	
-	UpdateDNSMasqConf();
+	UpdateDNSMasqDomains();
 	
 	header('Location: domains.php');
 	exit;
