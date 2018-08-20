@@ -21,10 +21,6 @@ SmartGW is a VPN Gateway/Proxy that allows you to redirect specific internet dom
 * Automatically connect to least busy, low latency VPN servers in a given country.
 * Auto retry and auto-failover to next best VPN server if the connection dies.
 
-![screenshot1](https://user-images.githubusercontent.com/957921/44305203-cfa78500-a37a-11e8-961c-cddea95773d2.png)
-![screenshot2](https://user-images.githubusercontent.com/957921/44305204-d2a27580-a37a-11e8-881e-120f065df056.png)
-![screenshot3](https://user-images.githubusercontent.com/957921/44305205-d46c3900-a37a-11e8-9c87-01e1b24ec4f1.png)
-
 ## How difficult it's?
 The setup is straightforward, you just need a Linux server in your network with a VPN subscription (below instructions support <a href="http://nordvpn.com">NordVPN</a> for now).
 
@@ -114,10 +110,16 @@ openpyn --init
 openpyn de  -d
 systemctl enable openpyn
 ```
-12. Open your browser and type your server ip with port 8081 (http://Your-Server-IP:8081/.
+12. Open your browser and type your SmartGW ip (port 8081) (http://Your-Server-IP:8081/.
 13. Define SmartGW IP address as the only DNS entry in the router.
 ```
 Log into your router’s configuration page and find the DHCP/DNS settings. Note: make sure you adjust this setting under your LAN settings and not the WAN.
-![6e475c318358d8266052015e28841a72b3cc3b84](https://user-images.githubusercontent.com/957921/44320410-9cccc200-a44a-11e8-88fe-570d01eb2e93.png)
 ```
+![6e475c318358d8266052015e28841a72b3cc3b84](https://user-images.githubusercontent.com/957921/44320410-9cccc200-a44a-11e8-88fe-570d01eb2e93.png)
+
 14. Enjoy!.
+
+## Screenshots
+![screenshot1](https://user-images.githubusercontent.com/957921/44305203-cfa78500-a37a-11e8-961c-cddea95773d2.png)
+![screenshot2](https://user-images.githubusercontent.com/957921/44305204-d2a27580-a37a-11e8-881e-120f065df056.png)
+![screenshot3](https://user-images.githubusercontent.com/957921/44305205-d46c3900-a37a-11e8-9c87-01e1b24ec4f1.png)
