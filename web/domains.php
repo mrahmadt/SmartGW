@@ -5,9 +5,16 @@ if(isset($_GET['delete']) && is_numeric($_GET['delete']) ){
 	$db = new SQLite3(DATABASE_FILE);
 	$ret =  $db->exec('DELETE FROM domains WHERE id=' . addslashes($_GET['delete']));
     $db->close();
-	UpdateDNSMasqConf();
+	//UpdateDNSMasqConf();
 	exit;
 }
+
+if(isset($_GET['action']) && ($_GET['action']=='UpdateDNSMasqConf') ){
+	UpdateDNSMasqConf();
+	header('Location: domains.php');
+	exit;
+}
+
 
 $limit      = ( isset( $_GET['limit'] ) && is_numeric($_GET['limit']) ) ? $_GET['limit'] : 100;
 $page       = ( isset( $_GET['page'] ) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
@@ -41,8 +48,9 @@ require_once 'header.php';
     </tbody>
   </table>
 </div>
-<small>Note: nordvpn.com and smartgw domains will be included by default.
-<?php echo $Paginator->createLinks( $links, 'pagination justify-content-center' ); ?> 
+<?php echo $Paginator->createLinks( $links, 'pagination justify-content-center' ); ?>
+<b>Important:</b> Note that domains are not automatically deleted on this page to avoid restarting the DNS service too often. instead, click on this button, to have the new settings become effective:
+<a href="domains.php?action=UpdateDNSMasqConf" class="btn btn-info btn-block">Restart my DNS</a>
 <?php require_once 'footer.php';?>
 <script>
 $( document ).ready(function() {
