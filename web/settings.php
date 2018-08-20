@@ -40,7 +40,8 @@ if($_SERVER['REQUEST_METHOD']  == 'POST'){
 		$exeout = [];
 		exec('/usr/bin/sudo /usr/local/bin/openpyn -d '. $settings['vpncountrycode']['value'], $exeout, $return);
 	}
-
+	header('Location: settings.php');
+	exit;
 }
 
 
