@@ -130,5 +130,5 @@ Note: make sure you adjust this setting under your LAN settings and not the WAN.
 ## Screenshots
 ![screenshot1](https://user-images.githubusercontent.com/957921/44305203-cfa78500-a37a-11e8-961c-cddea95773d2.png)
 ![screenshot2](https://user-images.githubusercontent.com/957921/44305204-d2a27580-a37a-11e8-881e-120f065df056.png)
-![screenshot3](https://user-images.githubusercontent.com/957921/44372879-b7587700-a4ee-11e8-9812-acbc29f5ea3f.png)
+![screenshot3](https://user-images.githubusercontent.com/957921/44372980-51b8ba80-a4ef-11e8-9485-2b01aff3a302.png)
 .
