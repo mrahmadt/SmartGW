@@ -12,6 +12,9 @@ require_once 'header.php';
       </tr>
     </thead>
     <tbody>
+<?php
+if(file_exists('/usr/local/bin/openpyn')) {
+?>
       <tr class="psservice" data-name="openpyn">
         <td class="servicename">VPN</td>
         <td class="servicestatus"><img src="assets/loading.gif" class="smallicon"></td>
@@ -24,21 +27,28 @@ require_once 'header.php';
         <td class="servicename">SNI Proxy</td>
         <td class="servicestatus"><img src="assets/loading.gif" class="smallicon"></td>
       </tr>
-      <tr class="psservice" data-name="dns">
-        <td class="servicename">DNS</td>
-        <td class="servicestatus"><img src="assets/loading.gif" class="smallicon"></td>
-      </tr>
+<?php } ?>
+<?php
+if(file_exists('/usr/sbin/squid')) {
+?>
       <tr class="psservice" data-name="squid">
         <td class="servicename">Squid</td>
         <td class="servicestatus"><img src="assets/loading.gif" class="smallicon"></td>
       </tr>
-	  
+<?php } ?>
+<?php
+if(!file_exists('/usr/local/bin/pihole')) {
+?>
+      <tr class="psservice" data-name="dns">
+        <td class="servicename">DNSMasq</td>
+        <td class="servicestatus"><img src="assets/loading.gif" class="smallicon"></td>
+      </tr>
+<?php }else{ ?>
       <tr class="psservice" data-name="pihole">
         <td><a href="https://pi-hole.net/" target=_new>Pi Hole</a></td>
         <td class="servicestatus"><img src="assets/loading.gif" class="smallicon"></td>
       </tr>
-
-	  
+<?php } ?>	  
     </tbody>
   </table>
 </div>
