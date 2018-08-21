@@ -44,7 +44,7 @@ add-apt-repository main
 add-apt-repository universe
 apt update
 ```
-5. Install SNIProxy from <a href="https://github.com/dlundquist/sniproxy">https://github.com/dlundquist/sniproxy</a> or using apt-get (Works with Ubuntu Server 18.04)
+5. Install SNIProxy from <a href="https://github.com/dlundquist/sniproxy">https://github.com/dlundquist/sniproxy</a> or use apt-get (Works with Ubuntu Server 18.04)
 ``` bash
 apt-get install sniproxy
 ```
