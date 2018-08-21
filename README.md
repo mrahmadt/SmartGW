@@ -62,9 +62,9 @@ systemctl enable sniproxy
 apt-get install squid
 perl -pi -e 's/^http_access allow localhost$/http_access allow localnet/g' /etc/squid/squid.conf
 perl -pi -e 's/^#acl localnet src/acl localnet src/g' /etc/squid/squid.conf
-echo "shutdown_lifetime 5 seconds" >> /etc/squid/squid.conf
-echo "include /etc/squid/smartgw.conf" >> /etc/squid/squid.conf
-touch /etc/squid/smartgw.conf
+echo 'shutdown_lifetime 2 seconds' >> /etc/squid/squid.conf
+echo 'include /etc/squid/smartgw.conf' >> /etc/squid/squid.conf
+echo '' > /etc/squid/smartgw.conf
 chown www-data:www-data /etc/squid/smartgw.conf
 chown www-data:www-data /etc/squid/squid.conf
 systemctl restart squid
@@ -78,9 +78,9 @@ DEFAULTIP=$(ip route| grep default| awk '{print $3}')
 echo "address=/smartgw/${DEFAULTIP}" >> /etc/dnsmasq.d/smartgw.conf
 echo "address=/nordvpn.com/${DEFAULTIP}" >> /etc/dnsmasq.d/smartgw.conf
 echo '' > /etc/dnsmasq.d/smartgw.conf
-echo 'server=208.67.222.222' > /etc/dnsmasq.d/smartgw-servers.conf
+echo 'server=208.67.222.222' > /etc/dnsmasq.d/smartgw-global.conf
 chown www-data:www-data  /etc/dnsmasq.d/smartgw.conf
-chown www-data:www-data  /etc/dnsmasq.d/smartgw-servers.conf
+chown www-data:www-data  /etc/dnsmasq.d/smartgw-global.conf
 systemctl restart dnsmasq
 systemctl enable dnsmasq
 ```
@@ -106,6 +106,7 @@ mkdir -p /etc/sudoers.d/
 echo '' > /etc/sudoers.d/smartgw
 echo 'www-data ALL=NOPASSWD: /usr/sbin/service' >> /etc/sudoers.d/smartgw
 echo 'www-data ALL=NOPASSWD: /usr/local/bin/openpyn' >> /etc/sudoers.d/smartgw
+echo 'www-data ALL=NOPASSWD: /usr/bin/tail' >> /etc/sudoers.d/smartgw
 chmod 0440 /etc/sudoers.d/smartgw
 ```
 11. Install and configure <a href="https://github.com/jotyGill/openpyn-nordvpn">openpyn-nordvpn</a>
@@ -129,5 +130,5 @@ Note: make sure you adjust this setting under your LAN settings and not the WAN.
 ## Screenshots
 ![screenshot1](https://user-images.githubusercontent.com/957921/44305203-cfa78500-a37a-11e8-961c-cddea95773d2.png)
 ![screenshot2](https://user-images.githubusercontent.com/957921/44305204-d2a27580-a37a-11e8-881e-120f065df056.png)
-![screenshot3](https://user-images.githubusercontent.com/957921/44305205-d46c3900-a37a-11e8-9c87-01e1b24ec4f1.png)
+![screenshot3](https://user-images.githubusercontent.com/957921/44372879-b7587700-a4ee-11e8-9812-acbc29f5ea3f.png)
 .
