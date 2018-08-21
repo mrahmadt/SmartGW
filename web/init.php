@@ -3,8 +3,79 @@
 define('WEBDIR',dirname(__FILE__));
 define('DATABASE_FILE',WEBDIR . '/.database.db');
 
+$UpstreamDNSProviders = [
+	'NordVPN' => ['103.86.96.100','103.86.99.100'],
+	'Google' => ['8.8.8.8','8.8.4.4'],
+	'OpenDNS Home' => ['208.67.222.222','208.67.220.220'],
+	'OpenDNS FamilyShield' => ['208.67.222.123','208.67.220.123'],
+	'Level3' => ['4.2.2.1','4.2.2.2'],
+	'Norton ConnectSafe - Security' => ['199.85.126.10','199.85.127.10'],
+	'Norton ConnectSafe - Security + Pornography' => ['199.85.126.20','199.85.127.20'],
+	'Norton ConnectSafe - Security + Pornography + Other' => ['199.85.126.30','199.85.127.30'],
+	'SecureDNS' => ['8.26.56.26','8.20.247.20'],
+	'DNS.WATCH' => ['84.200.69.80','84.200.70.40'],
+	'Quad9' => ['9.9.9.9','149.112.112.112'],
+	'CloudFlare' => ['1.1.1.1','1.0.0.1'],
+];
+
 if(!file_exists(DATABASE_FILE)) {
 	createDATABASEFile();
+}
+
+function UpdateSquidConf($nameserver1=null,$nameserver2=null,$access_log=false){
+	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
+	if (!filter_var($nameserver2, FILTER_VALIDATE_IP)) { return false; }
+	if(file_exists('/etc/squid/smartgw.conf')) {
+		$content = file_get_contents(WEBDIR . '/template/squid-smartgw.conf');
+		if($content){
+			$content = str_replace('%nameserver1%',$nameserver1,$content);
+			$content = str_replace('%nameserver2%',$nameserver2,$content);
+			if($access_log){
+				$content = str_replace('#access_log none#','',$content);
+			}else{
+				$content = str_replace('#access_log none#','access_log none',$content);
+			}
+			file_put_contents('/etc/squid/smartgw.conf',$content);
+			restartSquid();
+		}
+	}
+
+}
+function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$access_log=false){
+	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
+	if (!filter_var($nameserver2, FILTER_VALIDATE_IP)) { return false; }
+	if(file_exists('/etc/dnsmasq.d/smartgw-global.conf')) {
+		$content = file_get_contents(WEBDIR . '/template/dnsmasq-smartgw-global.conf');
+		if($content){
+			$content = str_replace('%nameserver1%',$nameserver1,$content);
+			$content = str_replace('%nameserver2%',$nameserver2,$content);
+			if($access_log){
+				$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#',"log-queries=extra\nlog-facility=/var/log/dnsmasq-queries.log\nlog-async",$content);
+			}else{
+				$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#','',$content);
+			}
+			file_put_contents('/etc/dnsmasq.d/smartgw-global.conf',$content);
+			restartDNS();
+		}
+	}
+}
+function UpdateSNIProxyConf($nameserver1=null,$nameserver2=null,$access_log=false){
+	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
+	if (!filter_var($nameserver2, FILTER_VALIDATE_IP)) { return false; }
+	if(file_exists('/etc/sniproxy.conf')) {
+		$content = file_get_contents(WEBDIR . '/template/sniproxy.conf');
+		if($content){
+			$content = str_replace('%nameserver1%',$nameserver1,$content);
+			$content = str_replace('%nameserver2%',$nameserver2,$content);
+			if($access_log){
+				$content = str_replace('#access_log {filename /var/log/sniproxy-access.log}#',"access_log {\nfilename /var/log/sniproxy-access.log\n}",$content);
+			}else{
+				$content = str_replace('#access_log {filename /var/log/sniproxy-access.log}#','',$content);
+			}
+			file_put_contents('/etc/sniproxy.conf',$content);
+			restartSNIProxy();
+		}
+	}
 }
 
 function createDATABASEFile(){
@@ -28,6 +99,7 @@ function createDATABASEFile(){
 	header('Location: settings.php?s');
 	exit;
 }
+
 function settingsIsOK(){
 	$db = new SQLite3(DATABASE_FILE);
 	if(!$db) {
@@ -42,8 +114,7 @@ function settingsIsOK(){
 	}
 	return true;
 }
-function UpdateDNSMasqConf(){
-	#/etc/dnsmasq.d/smartgw.conf
+function UpdateDNSMasqDomains(){
 	$db = new SQLite3(DATABASE_FILE);
 	if(!$db) {
 	   echo $db->lastErrorMsg();
@@ -76,6 +147,13 @@ function restartDNS(){
 	if ($return == 0) {
 		exec('/usr/bin/sudo /usr/sbin/service dnsmasq restart', $exeout, $return);	
 	}
+}
+
+function restartSquid(){
+	exec('/usr/bin/sudo /usr/sbin/service squid restart', $exeout, $return);	
+}
+function restartSNIProxy(){
+	exec('/usr/bin/sudo /usr/sbin/service sniproxy restart', $exeout, $return);	
 }
 
 class Paginator {
