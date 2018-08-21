@@ -19,6 +19,8 @@
           <li class="nav-item"><a class="nav-link" href="domains.php">Domains</a></li>
           <li class="nav-item"><a class="nav-link" href="index.php">Status</a></li>
           <li class="nav-item"><a class="nav-link" href="settings.php">Settings</a></li>
+          <li class="nav-item"><a class="nav-link" href="logs.php">Logs</a></li>
+		  
       </ul>
   </div>
 </nav>
