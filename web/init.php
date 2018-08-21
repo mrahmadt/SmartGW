@@ -47,10 +47,16 @@ function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$access_log=false
 	if(file_exists('/etc/dnsmasq.d/smartgw-global.conf')) {
 		$content = file_get_contents(WEBDIR . '/template/dnsmasq-smartgw-global.conf');
 		if($content){
+			exec("echo '' > /etc/dnsmasq.d/smartgw-global.conf", $exeout, $return);
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
 			$content = str_replace('%nameserver2%',$nameserver2,$content);
 			if($access_log){
-				$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#',"log-queries=extra\nlog-facility=/var/log/dnsmasq-queries.log\nlog-async",$content);
+				exec("egrep '^log-queries'  /etc/dnsmasq.d/*", $exeout, $return);
+				if ($return == 0) {
+					$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#','',$content);
+				}else{
+					$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#',"log-queries=extra\nlog-facility=/var/log/dnsmasq-queries.log\nlog-async",$content);
+				}
 			}else{
 				$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#','',$content);
 			}
