@@ -451,7 +451,7 @@ install_squid() {
 		perl -pi -e 's/^http_access allow localhost$/http_access allow localnet/g' /etc/squid/squid.conf
 		perl -pi -e 's/^#acl localnet src/acl localnet src/g' /etc/squid/squid.conf
 		
-		if grep -eq '^shutdown_lifetime' "/etc/squid/squid.conf"; then
+		if grep -q "shutdown_lifetime 2 seconds" /etc/squid/squid.conf; then
 			echo ''
 	  	else
 			echo 'shutdown_lifetime 2 seconds' >> /etc/squid/squid.conf
@@ -630,7 +630,7 @@ install_openpyn() {
 		echo -e "Installing openpyn"
 		python3 -m pip install --upgrade pip
 		python3 -m pip install --upgrade openpyn
-		openpyn --init
+		#openpyn --init
 		#openpyn de  -d
 		enable_service openpyn
 	fi
@@ -660,7 +660,7 @@ main() {
 	
 	if [[ "${DISTRO}" == "Debian" ]]; then
 		add-apt-repository -y main
-		add-apt-repository universe
+		add-apt-repository -y universe
 		apt-get update
 	fi
 	
@@ -731,6 +731,13 @@ main() {
 	
 	install_openpyn
 	
+	if [[ "${INSTALL_OPENPYN}" == true ]]; then	
+		echo -e "****************************************************************"
+		echo -e "*** Installation completed Successfully"
+		echo -e "*** PLEASE RUN \"openpyn --init\" to complete the VPN setup"
+		echo -e "****************************************************************"
+	fi
+	echo ""
     echo -e "View the web interface at http://${DEFAULT_IP}:8081/smartgw"
     echo ""
 	echo -e "You may now configure your devices to use the SmartGW as their DNS server"
