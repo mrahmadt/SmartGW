@@ -659,9 +659,9 @@ main() {
     distro_check
 	
 	if [[ "${DISTRO}" == "Debian" ]]; then
-		add-apt-repository main | echo ''
-		add-apt-repository universe | echo ''
-		apt-get update | echo ''
+		add-apt-repository -y main
+		add-apt-repository universe
+		apt-get update
 	fi
 	
 	
