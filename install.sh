@@ -493,6 +493,8 @@ install_sniproxy() {
 			rpmbuild --define "_sourcedir `pwd`" -ba redhat/sniproxy.spec
 			yum install ../sniproxy-*.*.rpm
 		fi
+		touch /var/log/sniproxy-access.log
+		chown daemon:daemon /var/log/sniproxy-access.log
 		cp /etc/sniproxy.conf /etc/sniproxy.conf.${TIMENOW}
 		cp "${BUILD_DIR}"/SmartGW/conf/sniproxy.conf /etc/sniproxy.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/sniproxy.conf
