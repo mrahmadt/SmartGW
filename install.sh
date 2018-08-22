@@ -731,18 +731,15 @@ main() {
 	
 	install_openpyn
 	
+	echo -e "*************************************************************************************"
+	echo -e "*** Installation completed Successfully"
+	
 	if [[ "${INSTALL_OPENPYN}" == true ]]; then	
-		echo -e "****************************************************************"
-		echo -e "*** Installation completed Successfully"
-		echo -e "*** PLEASE RUN \"openpyn --init\" to complete the VPN setup"
-		echo -e "****************************************************************"
+		echo -e "--- IMPORTANT PLEASE RUN \"openpyn --init\" to complete the VPN setup"
 	fi
-	echo ""
-    echo -e "View the web interface at http://${DEFAULT_IP}:8081/smartgw"
-    echo ""
-	echo -e "You may now configure your devices to use the SmartGW as their DNS server"
-	echo -e "SmartGW DNS (IPv4): ${DEFAULT_IP}"
-	echo -e "If you set a new IP address, please restart the server running the SmartGW"
+    echo -e "--- View the web interface at http://${DEFAULT_IP}:8081/smartgw"
+	echo -e "--- Configure your devices to use the SmartGW (${DEFAULT_IP}) as their DNS server"
+	echo -e "**************************************************************************************"
 
 }
 
