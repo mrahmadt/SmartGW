@@ -101,7 +101,7 @@ if ($return == 0) {
 $exeout = [];
 
 if(!file_exists('/usr/local/bin/openpyn')) {
-	exec('openpyn -l', $exeout, $return);
+	exec('/usr/local/bin/openpyn -l', $exeout, $return);
 
 	$vpncountries = [];
 	if ($return == 0) {
