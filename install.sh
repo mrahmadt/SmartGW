@@ -15,7 +15,7 @@
 # Install with this command (from your Linux machine):
 #
 # curl -sSL https://raw.githubusercontent.com/mrahmadt/SmartGW/master/install.sh | bash
-# https://git.io/Install-SmartGW
+# http://bit.ly/Install-SmartGW
 
 # -e option instructs bash to immediately exit if any command [1] has a non-zero exit status
 # We do not want users to end up with a partially working install, so we exit the script
