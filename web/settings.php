@@ -100,9 +100,10 @@ if ($return == 0) {
 
 $exeout = [];
 
-if(!file_exists('/usr/local/bin/openpyn')) {
+if(file_exists('/usr/local/bin/openpyn')) {
 	exec('/usr/local/bin/openpyn -l', $exeout, $return);
-
+	print_r($return);
+	print_r($exeout);
 	$vpncountries = [];
 	if ($return == 0) {
 		foreach ($exeout as $row){
@@ -120,7 +121,7 @@ if(!file_exists('/usr/local/bin/openpyn')) {
 	}
 }
 
-
+print_r($vpncountries);
 
 
 
