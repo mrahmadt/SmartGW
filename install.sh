@@ -666,10 +666,10 @@ main() {
 	
 	
     # Update package cache
-    #update_package_cache || exit 1
+    update_package_cache || exit 1
 	
     # Notify user of package availability
-    #notify_package_updates_available
+    notify_package_updates_available
 	
     # Install packages used by this installation script
     install_dependent_packages INSTALLER_DEPS[@]
