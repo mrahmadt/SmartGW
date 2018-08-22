@@ -620,9 +620,9 @@ configure_sudo() {
 	echo -e "Configure sudo for ${LIGHTTPD_USER}"
 	mkdir -p /etc/sudoers.d/
 	echo '' > /etc/sudoers.d/smartgw
-	echo '${LIGHTTPD_USER} ALL=NOPASSWD: /usr/sbin/service' >> /etc/sudoers.d/smartgw
-	echo '${LIGHTTPD_USER} ALL=NOPASSWD: /usr/local/bin/openpyn' >> /etc/sudoers.d/smartgw
-	echo '${LIGHTTPD_USER} ALL=NOPASSWD: /usr/bin/tail' >> /etc/sudoers.d/smartgw
+	echo "${LIGHTTPD_USER} ALL=NOPASSWD: /usr/sbin/service" >> /etc/sudoers.d/smartgw
+	echo "${LIGHTTPD_USER} ALL=NOPASSWD: /usr/local/bin/openpyn" >> /etc/sudoers.d/smartgw
+	echo "${LIGHTTPD_USER} ALL=NOPASSWD: /usr/bin/tail" >> /etc/sudoers.d/smartgw
 	chmod 0440 /etc/sudoers.d/smartgw
 }
 install_openpyn() {
