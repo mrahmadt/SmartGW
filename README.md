@@ -34,7 +34,7 @@ The setup is straightforward, you just need a Linux server in your network with 
 2. Set a static IP in your server.
 3. Run SmartGW installer
 ``` bash
-curl -sSL https://git.io/Install-SmartGW | bash
+curl -sSL http://bit.ly/Install-SmartGW | bash
 ```
 4. Run below command to complete the VPN setup
 ``` bash
