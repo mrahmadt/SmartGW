@@ -632,7 +632,7 @@ install_openpyn() {
 		python3 -m pip install --upgrade openpyn
 		#openpyn --init
 		#openpyn de  -d
-		enable_service openpyn
+		#enable_service openpyn
 	fi
 }
 
