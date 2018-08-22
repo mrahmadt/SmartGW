@@ -555,8 +555,8 @@ install_dnsmasq() {
 		
 		#PI HOLE?
 		if [[ ! -f /etc/dnsmasq.d/01-pihole.conf ]]; then
-			echo 'server=208.67.222.222' >> /etc/dnsmasq.d/smartgw-global.conf
-			echo 'server=208.67.220.220' >> /etc/dnsmasq.d/smartgw-global.conf
+			echo 'server=103.86.96.100' >> /etc/dnsmasq.d/smartgw-global.conf
+			echo 'server=103.86.99.100' >> /etc/dnsmasq.d/smartgw-global.conf
 			stop_service dnsmasq
 	        start_service dnsmasq
 	        enable_service dnsmasq
