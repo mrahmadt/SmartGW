@@ -115,7 +115,7 @@ if command -v apt-get &> /dev/null; then
 	SQUID_DEPS=(squid)
 	DNSMASQ_DEPS=(dnsmasq)
 	SNIPROXY_DEPS=(autotools-dev cdbs debhelper dh-autoreconf dpkg-dev gettext libev-dev libpcre3-dev libudns-dev pkg-config fakeroot devscripts build-essential)
-	OPENPYN_DEPS=(openvpn unzip wget python3-setuptools python3-pip)
+	OPENPYN_DEPS=(openvpn unzip wget python3-setuptools python3-pip expect)
     SMARTGW_WEB_DEPS=(lighttpd ${phpVer}-common ${phpVer}-cgi ${phpVer}-${phpSqlite})
 
 	# The Web server user,
