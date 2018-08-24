@@ -632,9 +632,13 @@ install_openpyn() {
 		echo -e "Installing openpyn"
 		python3 -m pip install --upgrade pip
 		python3 -m pip install --upgrade openpyn
-		#openpyn --init
-		#openpyn de  -d
-		#enable_service openpyn
+        # need to get the variables from users
+        # nordvpn_username = "your@email.com"
+        # nordvpn_password = "p@ssw0rd"
+        # openpyn_options = "de -t 3"
+
+		#${BUILD_DIR}/SmartGW/openpyn-setup.sh $nordvpn_username $nordvpn_password $openpyn_options
+		#systemctl enable openpyn
 	fi
 }
 
