@@ -117,7 +117,7 @@ if command -v apt-get &> /dev/null; then
 	SNIPROXY_DEPS=(autotools-dev cdbs debhelper dh-autoreconf dpkg-dev gettext libev-dev libpcre3-dev libudns-dev pkg-config fakeroot devscripts build-essential)
 	OPENPYN_DEPS=(openvpn unzip wget python3-setuptools python3-pip)
     SMARTGW_WEB_DEPS=(lighttpd ${phpVer}-common ${phpVer}-cgi ${phpVer}-${phpSqlite})
-    
+
 	# The Web server user,
     LIGHTTPD_USER="www-data"
     # group,
@@ -145,7 +145,7 @@ if command -v apt-get &> /dev/null; then
 # If apt-get is not found, check for rpm to see if it's a Red Hat family OS
 elif command -v rpm &> /dev/null; then
 	DISTRO="Redhat"
-	
+
     # Then check if dnf or yum is the package manager
     if command -v dnf &> /dev/null; then
         PKG_MANAGER="dnf"
@@ -157,7 +157,7 @@ elif command -v rpm &> /dev/null; then
     UPDATE_PKG_CACHE=":"
     PKG_INSTALL=(${PKG_MANAGER} install -y)
     PKG_COUNT="${PKG_MANAGER} check-update | egrep '(.i686|.x86|.noarch|.arm|.src)' | wc -l"
-		
+
     INSTALLER_DEPS=(git iproute net-tools newt procps-ng which)
     SMARTGW_DEPS=(bind-utils curl findutils nmap-ncat sudo unzip wget libidn2 psmisc)
     SMARTGW_WEB_DEPS=(lighttpd lighttpd-fastcgi php-common php-cli php-pdo)
@@ -168,7 +168,7 @@ elif command -v rpm &> /dev/null; then
     LIGHTTPD_USER="lighttpd"
     LIGHTTPD_GROUP="lighttpd"
     LIGHTTPD_CFG="lighttpd.conf.fedora"
-	
+
     # If the host OS is Fedora,
     if grep -qi 'fedora' /etc/redhat-release; then
 		DISTRO_Type="Fedora"
@@ -225,7 +225,7 @@ elif command -v rpm &> /dev/null; then
                 echo -e "There was a problem updating to PHP7 via Remi's RPM repository"
                 exit 1
             fi
-            
+
         fi
     fi
     else
@@ -450,24 +450,24 @@ install_squid() {
 		echo -e "Installing Squid"
 		perl -pi -e 's/^http_access allow localhost$/http_access allow localnet/g' /etc/squid/squid.conf
 		perl -pi -e 's/^#acl localnet src/acl localnet src/g' /etc/squid/squid.conf
-		
+
 		if grep -q "shutdown_lifetime 2 seconds" /etc/squid/squid.conf; then
 			echo ''
 	  	else
 			echo 'shutdown_lifetime 2 seconds' >> /etc/squid/squid.conf
 		fi
-		
+
 		if grep -q smartgw.conf "/etc/squid/squid.conf"; then
 			echo ''
 	  	else
 			echo 'include /etc/squid/smartgw.conf' >> /etc/squid/squid.conf
 		fi
-		
+
 		echo '' > /etc/squid/smartgw.conf
-		
+
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/squid.conf
-		
+
 		stop_service squid
         start_service squid
         enable_service squid
@@ -533,26 +533,26 @@ install_dnsmasq() {
 	if [[ "${INSTALL_DNSMASQ}" == true ]]; then
 		echo -e "Installing DNSMasq"
 		disable_resolved_stublistener
-		
+
 		perl -pi -e 's/^#conf-dir=\/etc\/dnsmasq.d\/,\*.conf$/conf-dir=\/etc\/dnsmasq.d\/,\*.conf/g' /etc/dnsmasq.conf
 
 	    if [[ ! -d "/etc/dnsmasq.d"  ]];then
 	        mkdir "/etc/dnsmasq.d"
 	    fi
-		
+
 		#if [[ -f "/etc/dnsmasq.d/smartgw.conf" ]]; then
 		#	cp /etc/dnsmasq.d/smartgw.conf /etc/dnsmasq.d/smartgw.conf.${TIMENOW}
 		#fi
 		#if [[ -f "/etc/dnsmasq.d/smartgw-global.conf" ]]; then
 		#	cp /etc/dnsmasq.d/smartgw-global.conf /etc/dnsmasq.d/smartgw-global.conf.${TIMENOW}
 		#fi
-		
+
 		echo '' > /etc/dnsmasq.d/smartgw.conf
 		echo '' > /etc/dnsmasq.d/smartgw-global.conf
-		
+
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP}  /etc/dnsmasq.d/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP}  /etc/dnsmasq.d/smartgw-global.conf
-		
+
 		#PI HOLE?
 		if [[ ! -f /etc/dnsmasq.d/01-pihole.conf ]]; then
 			echo 'server=103.86.96.100' >> /etc/dnsmasq.d/smartgw-global.conf
@@ -560,7 +560,7 @@ install_dnsmasq() {
 			stop_service dnsmasq
 	        start_service dnsmasq
 	        enable_service dnsmasq
-		fi		
+		fi
 	fi
 }
 install_lighttpd() {
@@ -573,7 +573,7 @@ install_lighttpd() {
         #elif [[ -f "/etc/lighttpd/lighttpd.conf" ]]; then
         #    cp /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.${TIMENOW}
         #fi
-				
+
         # Make the directories if they do not exist and set the owners
         mkdir -p /var/run/lighttpd
         chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /var/run/lighttpd
@@ -588,12 +588,12 @@ install_lighttpd() {
 		lighttpd-enable-mod fastcgi | echo ''
 		lighttpd-enable-mod fastcgi-php | echo ''
 		lighttpd-enable-mod rewrite | echo ''
-		
-		
+
+
 		stop_service lighttpd
         start_service lighttpd
         enable_service lighttpd
-		
+
     fi
 }
 
@@ -608,7 +608,7 @@ install_smartgw() {
 			cp  /var/www/html/smartgw.${TIMENOW}/.database.db /var/www/html/smartgw/
 		fi
 	fi
-	
+
 	#if [[ -f "/var/www/html/index.html" ]]; then
 	#	cp /var/www/html/index.html /var/www/html/index.html.${TIMENOW}
 	#}
@@ -659,24 +659,24 @@ main() {
 
     # Check for supported distribution
     distro_check
-	
+
 	if [[ "${DISTRO}" == "Debian" ]]; then
 		add-apt-repository -y main
 		add-apt-repository -y universe
 		apt-get update
 	fi
-	
-	
+
+
     # Update package cache
     update_package_cache || exit 1
-	
+
     # Notify user of package availability
     notify_package_updates_available
-	
+
     # Install packages used by this installation script
     install_dependent_packages INSTALLER_DEPS[@]
 
-	
+
     # Check if SELinux is Enforcing
     checkSelinux
 
@@ -685,7 +685,7 @@ main() {
         # Install the Web dependencies
         dep_install_list+=("${SMARTGW_WEB_DEPS[@]}")
     fi
-	
+
     if [[ "${INSTALL_SQUID}" == true ]]; then
         # Install the Web dependencies
         dep_install_list+=("${SQUID_DEPS[@]}")
@@ -700,12 +700,12 @@ main() {
         # Install the Web dependencies
         dep_install_list+=("${SNIPROXY_DEPS[@]}")
     fi
-	
+
     if [[ "${INSTALL_OPENPYN}" == true ]]; then
         # Install the Web dependencies
         dep_install_list+=("${OPENPYN_DEPS[@]}")
     fi
-	
+
     install_dependent_packages dep_install_list[@]
     unset dep_install_list
 
@@ -713,34 +713,34 @@ main() {
 	rm -rf "${BUILD_DIR}"
 	mkdir "${BUILD_DIR}"
 	cd "${BUILD_DIR}"
-	
-	
+
+
 	echo -e "Clone SmartGW git repository"
 	cd "${BUILD_DIR}"
 	git clone https://github.com/mrahmadt/SmartGW.git
-	
+
 	install_sniproxy
 
 	install_squid
-	
+
 	install_dnsmasq
-	
+
 	install_lighttpd
-	
+
 	install_smartgw
-	
+
 	configure_sudo
-	
+
 	install_openpyn
-	
+
 	echo ""
 	echo ""
 	echo ""
 	echo ""
 	echo -e "*************************************************************************************"
 	echo -e "*** Installation completed Successfully"
-	
-	if [[ "${INSTALL_OPENPYN}" == true ]]; then	
+
+	if [[ "${INSTALL_OPENPYN}" == true ]]; then
 		echo -e "--- IMPORTANT PLEASE RUN \"openpyn --init\" to complete the VPN setup"
 	fi
     echo -e "--- View the web interface at http://${DEFAULT_IP%% }:8081/smartgw"
