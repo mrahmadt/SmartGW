@@ -31,8 +31,8 @@ INSTALL_SNIPROXY=true
 INSTALL_OPENPYN=true
 
 
-DEFAULT_IP=$(ip route| grep default | grep -Po '(?<=src )(\d{1,3}.){4}')
-#DEFAULT_INTERFACE=$(ip route| grep default| awk '{print $5}')
+DEFAULT_INTERFACE=$(ip route| grep default| awk '{print $5}')
+DEFAULT_IP=$(ip addr show dev  $DEFAULT_INTERFACE | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
 
 BUILD_DIR="/root/smartgw-build"
 
