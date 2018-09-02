@@ -93,7 +93,7 @@ if ($return == 0) {
 		$interfaces[trim($interface[0])] = trim($interface[1]);
 	}
 }else{
-	echo '<h3>ERROR</h3>';
+	echo '<h3>ERROR @ listinterfaces.sh</h3>';
 	print_r($return);
 	exit;
 }
@@ -102,8 +102,6 @@ $exeout = [];
 
 if(file_exists('/usr/local/bin/openpyn')) {
 	exec('/usr/local/bin/openpyn -l', $exeout, $return);
-	print_r($return);
-	print_r($exeout);
 	$vpncountries = [];
 	if ($return == 0) {
 		foreach ($exeout as $row){
@@ -115,8 +113,7 @@ if(file_exists('/usr/local/bin/openpyn')) {
 			$vpncountries[trim($country)] = trim($countrycode);
 		}
 	}else{
-		echo '<h3>ERROR</h3>';
-		print_r($return);
+		echo '<h3>ERROR</h3><br> Please run <b>/usr/local/bin/openpyn --init</b> to initialise openpyn before you login to the web interface!';
 		exit;
 	}
 }
