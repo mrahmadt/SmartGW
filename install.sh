@@ -630,11 +630,15 @@ install_openpyn() {
 		python3 -m pip install --upgrade openpyn
 		
         # need to get the variables from users
-		echo -e "Enter your username for NordVPN, i.e youremail@yourmail.com: "
+		echo ""
+		echo ""
+		echo ""
+		echo ""
+		echo "Enter your username for NordVPN, i.e youremail@yourmail.com: "
 		read nordvpn_username
-		echo -e "Enter the password for NordVPN: "
+		echo "Enter the password for NordVPN: "
 		read nordvpn_password
-		echo -e "Enter Openpyn options (Press enter for the default uk) [uk]: "
+		echo "Enter Openpyn options (Press enter for the default uk) [uk]: "
 		read openpyn_options
 		${BUILD_DIR}/SmartGW/web/openpyn-setup.sh "${nordvpn_username}" "${nordvpn_password}" "${openpyn_options}"
 		enable_service openpyn
