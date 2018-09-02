@@ -118,10 +118,6 @@ if(file_exists('/usr/local/bin/openpyn')) {
 	}
 }
 
-print_r($vpncountries);
-
-
-
 require_once 'header.php';
 ?>
 <h2>Settings</h2>
