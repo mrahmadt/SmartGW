@@ -22,7 +22,6 @@
 # instead of continuing the installation with something broken
 set -e
 
-
 ######## VARIABLES #########
 
 INSTALL_WEB_SERVER=true
