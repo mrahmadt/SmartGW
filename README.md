@@ -34,14 +34,10 @@ The setup is straightforward, you just need a Linux server in your network with 
 2. Set a static IP in your server.
 3. Run SmartGW installer
 ``` bash
-curl -sSL http://bit.ly/Install-SmartGW | bash
+bash -c "$(curl -sSL http://bit.ly/Install-SmartGW)"
 ```
-4. Run below command to complete the VPN setup
-``` bash
-openpyn --init
-```
-5. Open your browser and type your SmartGW ip (port 8081) (http://Your-Server-IP:8081/) & define which network interface to use.
-6. Define SmartGW IP address as the only DNS entry in the router.
+4. Open your browser and type your SmartGW ip (port 8081) (http://Your-Server-IP:8081/) & define which network interface to use.
+5. Define SmartGW IP address as the only DNS entry in the router.
 ```
 Log into your router’s configuration page and find the DHCP/DNS settings. 
 Note: make sure you adjust this setting under your LAN settings and not the WAN.

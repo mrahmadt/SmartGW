@@ -14,7 +14,7 @@
 # Please see LICENSE file for your rights under this license.
 # Install with this command (from your Linux machine):
 #
-# curl -sSL https://raw.githubusercontent.com/mrahmadt/SmartGW/master/install.sh | bash
+# bash -c "$(curl -sSL https://raw.githubusercontent.com/mrahmadt/SmartGW/master/install.sh)"
 # http://bit.ly/Install-SmartGW
 
 # -e option instructs bash to immediately exit if any command [1] has a non-zero exit status
@@ -163,7 +163,7 @@ elif command -v rpm &> /dev/null; then
 	SQUID_DEPS=(squid)
 	DNSMASQ_DEPS=(dnsmasq)
 	SNIPROXY_DEPS=(autoconf automake curl gettext-devel libev-devel pcre-devel perl pkgconfig rpm-build udns-devel make automake gcc gcc-c++)
-	OPENPYN_DEPS=(openvpn unzip wget python3-setuptools python3-pip)
+	OPENPYN_DEPS=(openvpn unzip wget python3-setuptools python3-pip expect)
     LIGHTTPD_USER="lighttpd"
     LIGHTTPD_GROUP="lighttpd"
     LIGHTTPD_CFG="lighttpd.conf.fedora"
@@ -466,10 +466,9 @@ install_squid() {
 
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/squid.conf
-
+        enable_service squid
 		stop_service squid
         start_service squid
-        enable_service squid
 	fi
 }
 
@@ -499,9 +498,9 @@ install_sniproxy() {
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/sniproxy.conf
 		perl -pi -e 's/^ENABLED=0$/ENABLED=1/g' /etc/default/sniproxy
 		perl -pi -e 's/^#DAEMON_ARGS/DAEMON_ARGS/g' /etc/default/sniproxy
+        enable_service sniproxy
 		stop_service sniproxy
         start_service sniproxy
-        enable_service sniproxy
 	fi
 }
 # Systemd-resolved's DNSStubListener and dnsmasq can't share port 53.
@@ -556,9 +555,9 @@ install_dnsmasq() {
 		if [[ ! -f /etc/dnsmasq.d/01-pihole.conf ]]; then
 			echo 'server=103.86.96.100' >> /etc/dnsmasq.d/smartgw-global.conf
 			echo 'server=103.86.99.100' >> /etc/dnsmasq.d/smartgw-global.conf
+	        enable_service dnsmasq
 			stop_service dnsmasq
 	        start_service dnsmasq
-	        enable_service dnsmasq
 		fi
 	fi
 }
@@ -588,11 +587,9 @@ install_lighttpd() {
 		lighttpd-enable-mod fastcgi-php | echo ''
 		lighttpd-enable-mod rewrite | echo ''
 
-
+        enable_service lighttpd
 		stop_service lighttpd
         start_service lighttpd
-        enable_service lighttpd
-
     fi
 }
 
@@ -631,13 +628,18 @@ install_openpyn() {
 		echo -e "Installing openpyn"
 		python3 -m pip install --upgrade pip
 		python3 -m pip install --upgrade openpyn
+		
         # need to get the variables from users
-        # nordvpn_username = "your@email.com"
-        # nordvpn_password = "p@ssw0rd"
-        # openpyn_options = "de -t 3"
-
-		#${BUILD_DIR}/SmartGW/openpyn-setup.sh $nordvpn_username $nordvpn_password $openpyn_options
-		#systemctl enable openpyn
+		echo -e "Enter your username for NordVPN, i.e youremail@yourmail.com: "
+		read nordvpn_username
+		echo -e "Enter the password for NordVPN: "
+		read nordvpn_password
+		echo -e "Enter Openpyn options (Press enter for the default uk) [uk]: "
+		read openpyn_options
+		${BUILD_DIR}/SmartGW/web/openpyn-setup.sh "${nordvpn_username}" "${nordvpn_password}" "${openpyn_options}"
+		enable_service openpyn
+		stop_service openpyn
+        start_service openpyn
 	fi
 }
 
@@ -742,10 +744,6 @@ main() {
 	echo ""
 	echo -e "*************************************************************************************"
 	echo -e "*** Installation completed Successfully"
-
-	if [[ "${INSTALL_OPENPYN}" == true ]]; then
-		echo -e "--- IMPORTANT PLEASE RUN \"openpyn --init\" to complete the VPN setup"
-	fi
     echo -e "--- View the web interface at http://${DEFAULT_IP%% }:8081/smartgw"
 	echo -e "--- Configure your devices to use the SmartGW (${DEFAULT_IP%% }) as their DNS server"
 	echo -e "**************************************************************************************"
