@@ -47,23 +47,27 @@ function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$access_log=false
 	if(file_exists('/etc/dnsmasq.d/smartgw-global.conf')) {
 		$content = file_get_contents(WEBDIR . '/template/dnsmasq-smartgw-global.conf');
 		if($content){
-			exec("echo '' > /etc/dnsmasq.d/smartgw-global.conf", $exeout, $return);
+			//exec("echo '' > /etc/dnsmasq.d/smartgw-global.conf", $exeout, $return);
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
 			$content = str_replace('%nameserver2%',$nameserver2,$content);
 			if($access_log){
 				exec("egrep '^log-queries'  /etc/dnsmasq.d/*", $exeout, $return);
-				if ($return == 0) {
-					$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#','',$content);
-				}else{
-					$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#',"log-queries=extra\nlog-facility=/var/log/dnsmasq-queries.log\nlog-async",$content);
+				if ($return != 0) {
+					$content = str_replace('#log-queries#',"log-queries",$content);
+					$content = str_replace('#log-facility#',"log-facility",$content);
+					$content = str_replace('#log-async#',"log-async",$content);
 				}
-			}else{
-				$content = str_replace('#log-queries=extra log-facility=/var/log/dnsmasq-queries.log log-async#','',$content);
 			}
 			file_put_contents('/etc/dnsmasq.d/smartgw-global.conf',$content);
-			restartDNS();
+			UpdateDNSMasqDomains();
 		}
 	}
+	$content = file_get_contents(WEBDIR . '/template/local-dnsmasq.conf');
+	$content = str_replace('%nameserver1%',$nameserver1,$content);
+	$content = str_replace('%nameserver2%',$nameserver2,$content);
+	file_put_contents('/etc/dnsmasq.d/local-dnsmasq.conf',$content);
+	restartLocalDNS();
+	
 }
 function UpdateSNIProxyConf($nameserver1=null,$nameserver2=null,$access_log=false){
 	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
@@ -72,11 +76,10 @@ function UpdateSNIProxyConf($nameserver1=null,$nameserver2=null,$access_log=fals
 		$content = file_get_contents(WEBDIR . '/template/sniproxy.conf');
 		if($content){
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
-			$content = str_replace('%nameserver2%',$nameserver2,$content);
+			$content = str_replace('%nameserver2%',$nameserver2,$content);			
 			if($access_log){
-				$content = str_replace('#access_log {filename /var/log/sniproxy-access.log}#',"access_log {\nfilename /var/log/sniproxy-access.log\n}",$content);
-			}else{
-				$content = str_replace('#access_log {filename /var/log/sniproxy-access.log}#','',$content);
+				$content = str_replace('#access_log#',"access_log",$content);
+				$content = str_replace('#error_log#',"error_log",$content);
 			}
 			file_put_contents('/etc/sniproxy.conf',$content);
 			restartSNIProxy();
@@ -120,7 +123,7 @@ function settingsIsOK(){
 	}
 	return true;
 }
-function UpdateDNSMasqDomains(){
+function UpdateDNSMasqDomains($restartDNS = true){
 	$db = new SQLite3(DATABASE_FILE);
 	if(!$db) {
 	   echo $db->lastErrorMsg();
@@ -129,15 +132,13 @@ function UpdateDNSMasqDomains(){
 	$ipaddress = $db->querySingle( "SELECT value FROM settings WHERE name LIKE 'ipaddress'");
 	if($ipaddress!=''){
 		$dnsmasqconf = '';
-		//$dnsmasqconf = "address=/smartgw/$ipaddress\n";
-		//$dnsmasqconf .= "address=/nordvpn.com/$ipaddress\n";
 	    $ret = $db->query( 'SELECT domain FROM domains' );
 	    while ( $row = $ret->fetchArray() ) {
 			$dnsmasqconf .= "address=/".$row['domain']."/$ipaddress\n";
 	    }
 		$db->close();
 		file_put_contents('/etc/dnsmasq.d/smartgw.conf',$dnsmasqconf);
-		restartDNS();
+		if($restartDNS) {restartDNS();}
 	}else{
 		$db->close();
 		return FALSE;
@@ -154,7 +155,9 @@ function restartDNS(){
 		exec('/usr/bin/sudo /usr/sbin/service dnsmasq restart', $exeout, $return);	
 	}
 }
-
+function restartLocalDNS(){
+	exec('/usr/bin/sudo /usr/sbin/service localdnsmasq restart', $exeout, $return);	
+}
 function restartSquid(){
 	exec('/usr/bin/sudo /usr/sbin/service squid restart', $exeout, $return);	
 }

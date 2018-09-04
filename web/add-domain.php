@@ -27,10 +27,6 @@ if(isset($_POST['domains']) && $_SERVER['REQUEST_METHOD']  == 'POST'){
 	foreach($domains as $domain){
 		$stmt->bindValue(':domain', $domain);
 		$stmt->execute();
-		//$ret =  $db->exec("INSERT INTO domains (domain) VALUES('".addslashes($domain)."')");
-	    //if(!$ret) {
-	    //   echo $db->lastErrorMsg();
-	    //}
 	}
     $db->close();
 	

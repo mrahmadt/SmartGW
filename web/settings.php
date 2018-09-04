@@ -21,11 +21,12 @@ if(isset($settings['dns2ip']['value'])){
 }
 $dnsips = implode(',',$dnsips);
 if($dnsips==''){
-	$dnsips = '208.67.222.222,208.67.220.220';
+	$dnsips = '103.86.96.100,103.86.99.100';
 }
 
 
 if($_SERVER['REQUEST_METHOD']  == 'POST'){
+	
 	$db = new SQLite3(DATABASE_FILE);
 	if(!$db) {
 	   echo $db->lastErrorMsg();
@@ -42,6 +43,9 @@ if($_SERVER['REQUEST_METHOD']  == 'POST'){
 			$myPOST[$name] = $value;
 		}
 	}
+	
+	if(trim($myPOST['dns1ip']) == '') { $myPOST['dns1ip'] = '103.86.96.100'; }
+	if(trim($myPOST['dns2ip']) == '') { $myPOST['dns2ip'] = '103.86.99.100'; }
 
 	foreach($myPOST as $name=>$value){
 		$value = trim($value);
@@ -49,37 +53,44 @@ if($_SERVER['REQUEST_METHOD']  == 'POST'){
 			$stmtUpdate->bindValue(':name', $name);
 			$stmtUpdate->bindValue(':value',$value);
 			$stmtUpdate->execute();
-			$settings[$name]['value'] = $value;
+			if($settings[$name]['value'] != $value){$changes[$name] = true;}else{$changes[$name] = false;}
 		}else{
 			$stmtInsert->bindValue(':name', $name);
 			$stmtInsert->bindValue(':value',$value);
 			$stmtInsert->execute();
+			$changes[$name] = false;
 		}
+		$settings[$name]['value'] = $value;
 	}	
     $db->close();
-	
 
-//	if(isset($myPOST['updateupstreamdns']) && $myPOST['updateupstreamdns'] == "1"){
-	if($myPOST['disablesquidlog']==1) { $access_log=false; }else{ $access_log=true; }
-	UpdateSquidConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablesquidlog'] ){
+		if($myPOST['disablesquidlog']==1) { $access_log=false; }else{ $access_log=true; }
+		UpdateSquidConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+	}
 	
-	if($myPOST['disablednsquerylog']==1) { $access_log=false; }else{ $access_log=true; }
-	UpdateDNSMasqConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
-	
-	if($myPOST['disablesniproxylog']==1) { $access_log=false; }else{ $access_log=true; }
-	UpdateSNIProxyConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
-
-	if(isset($myPOST['updatednsdomains']) && $myPOST['updatednsdomains'] == "1"){
+	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablednsquerylog'] ){
+		if($myPOST['disablednsquerylog']==1) { $access_log=false; }else{ $access_log=true; }
+		UpdateDNSMasqConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+	}elseif($changes['ipaddress']){
 		UpdateDNSMasqDomains();
 	}
+	
+	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablesniproxylog'] ){
+		if($myPOST['disablesniproxylog']==1) { $access_log=false; }else{ $access_log=true; }
+		UpdateSNIProxyConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+	}
+
 	if(isset($myPOST['restartvpn']) && $myPOST['restartvpn'] == "1"){
-		if(isset($settings['vpncountrycode'])){
+		if(isset($settings['vpncountrycode']) && $settings['vpncountrycode']['value']!=''){
 			$exeout = [];
+			exec('/usr/bin/sudo /usr/local/bin/openpyn -k');
 			exec('/usr/bin/sudo /usr/local/bin/openpyn -d '. $settings['vpncountrycode']['value'], $exeout, $return);
 		}
 	}
-	header('Location: settings.php');
-	exit;
+	//header('Location: settings.php');
+	//exit;
+	$alert['success'] = 'Your settings have been saved.';
 }
 
 
@@ -93,9 +104,10 @@ if ($return == 0) {
 		$interfaces[trim($interface[0])] = trim($interface[1]);
 	}
 }else{
-	echo '<h3>ERROR @ listinterfaces.sh</h3>';
-	print_r($return);
-	exit;
+	//echo '<h3>ERROR @ listinterfaces.sh</h3>';
+	//print_r($return);
+	//exit;
+	$alert['danger'] = 'Not able to get your network interfaces. ' . print_r($exeout,true);
 }
 
 $exeout = [];
@@ -113,8 +125,9 @@ if(file_exists('/usr/local/bin/openpyn')) {
 			$vpncountries[trim($country)] = trim($countrycode);
 		}
 	}else{
-		echo '<h3>ERROR</h3><br> Please run <b>/usr/local/bin/openpyn --init</b> to initialise openpyn before you login to the web interface!';
-		exit;
+		//echo '<h3>ERROR</h3><br> Please run <b>/usr/local/bin/openpyn --init</b> to initialise openpyn before you login to the web interface!';
+		$alert['danger'] = 'Please run <b>/usr/local/bin/openpyn --init</b> to initialise openpyn before you login to the web interface!. ' . print_r($exeout,true);
+		//exit;
 	}
 }
 
@@ -177,16 +190,6 @@ require_once 'header.php';
 <input type="checkbox" class="form-check-input" id="disablednsquerylog" name="disablednsquerylog" value="1" <?php if(isset($settings['disablednsquerylog']) && $settings['disablednsquerylog']['value']=="1"){?>checked<?php } ?>>
 <label class="form-check-label" for="disablednsquerylog">Disable DNS query log</label>
 </div>
-
-<div class="form-group form-check">
-<input type="checkbox" class="form-check-input" id="updatednsdomains" name="updatednsdomains" value="1">
-<label class="form-check-label" for="updatednsdomains">Restart my DNS</label>
-</div>
-<!--div class="form-group form-check">
-<input type="checkbox" class="form-check-input" id="updateupstreamdns" name="updateupstreamdns" value="1">
-<label class="form-check-label" for="updateupstreamdns">Apply my upstream DNS</label>
-</div-->
-
 <div class="form-group form-check">
 <input type="checkbox" class="form-check-input" id="restartvpn" name="restartvpn" value="1">
 <label class="form-check-label" for="restartvpn">Restart my VPN</label>
@@ -200,27 +203,10 @@ require_once 'header.php';
 <?php require_once 'footer.php';?>
 <script>
 $( document ).ready(function() {
-	var firstChange = true;
-	$( "#interfaceinput" ).change(function() {
-		$('#updatednsdomains').prop('checked', true);
-	});
 	$( "#vpncountryinput" ).change(function() {
 		$('#restartvpn').prop('checked', true);
 	});
-	
-	$( "#dns1ip" ).on('input',function(e){
-		$('#updateupstreamdns').prop('checked', true);
-	});
-	$( "#dns2ip" ).on('input',function(e){
-		$('#updateupstreamdns').prop('checked', true);
-	});
-	
 		$( "#UpstreamDNSProvidersInput" ).change(function() {
-			if(firstChange==true){
-				firstChange = false;
-			}else{
-				$('#updateupstreamdns').prop('checked', true);
-			}
 			selected = $("#UpstreamDNSProvidersInput option:selected");
 			if(selected.text()=='Custom'){
 				$('#DNSIPsInput').fadeIn();

@@ -449,21 +449,17 @@ install_squid() {
 		echo -e "Installing Squid"
 		perl -pi -e 's/^http_access allow localhost$/http_access allow localnet/g' /etc/squid/squid.conf
 		perl -pi -e 's/^#acl localnet src/acl localnet src/g' /etc/squid/squid.conf
-
 		if grep -q "shutdown_lifetime 2 seconds" /etc/squid/squid.conf; then
 			echo ''
 	  	else
 			echo 'shutdown_lifetime 2 seconds' >> /etc/squid/squid.conf
 		fi
-
 		if grep -q smartgw.conf "/etc/squid/squid.conf"; then
 			echo ''
 	  	else
 			echo 'include /etc/squid/smartgw.conf' >> /etc/squid/squid.conf
 		fi
-
-		echo '' > /etc/squid/smartgw.conf
-
+		echo 'dns_nameservers 127.0.0.1' > /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/squid.conf
         enable_service squid
@@ -491,10 +487,10 @@ install_sniproxy() {
 			rpmbuild --define "_sourcedir `pwd`" -ba redhat/sniproxy.spec
 			yum install ../sniproxy-*.*.rpm
 		fi
-		touch /var/log/sniproxy-access.log
-		chown daemon:daemon /var/log/sniproxy-access.log
+		touch /var/log/sniproxy-access.log /var/log/sniproxy-errors.log
+		chown daemon:daemon /var/log/sniproxy-access.log /var/log/sniproxy-errors.log
 		cp /etc/sniproxy.conf /etc/sniproxy.conf.${TIMENOW}
-		cp "${BUILD_DIR}"/SmartGW/conf/sniproxy.conf /etc/sniproxy.conf
+		cp "${BUILD_DIR}"/SmartGW/install/sniproxy.conf /etc/sniproxy.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/sniproxy.conf
 		perl -pi -e 's/^ENABLED=0$/ENABLED=1/g' /etc/default/sniproxy
 		perl -pi -e 's/^#DAEMON_ARGS/DAEMON_ARGS/g' /etc/default/sniproxy
@@ -531,26 +527,20 @@ install_dnsmasq() {
 	if [[ "${INSTALL_DNSMASQ}" == true ]]; then
 		echo -e "Installing DNSMasq"
 		disable_resolved_stublistener
-
 		perl -pi -e 's/^#conf-dir=\/etc\/dnsmasq.d\/,\*.conf$/conf-dir=\/etc\/dnsmasq.d\/,\*.conf/g' /etc/dnsmasq.conf
-
 	    if [[ ! -d "/etc/dnsmasq.d"  ]];then
 	        mkdir "/etc/dnsmasq.d"
 	    fi
-
 		#if [[ -f "/etc/dnsmasq.d/smartgw.conf" ]]; then
 		#	cp /etc/dnsmasq.d/smartgw.conf /etc/dnsmasq.d/smartgw.conf.${TIMENOW}
 		#fi
 		#if [[ -f "/etc/dnsmasq.d/smartgw-global.conf" ]]; then
 		#	cp /etc/dnsmasq.d/smartgw-global.conf /etc/dnsmasq.d/smartgw-global.conf.${TIMENOW}
 		#fi
-
 		echo '' > /etc/dnsmasq.d/smartgw.conf
 		echo '' > /etc/dnsmasq.d/smartgw-global.conf
-
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP}  /etc/dnsmasq.d/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP}  /etc/dnsmasq.d/smartgw-global.conf
-
 		#PI HOLE?
 		if [[ ! -f /etc/dnsmasq.d/01-pihole.conf ]]; then
 			echo 'server=103.86.96.100' >> /etc/dnsmasq.d/smartgw-global.conf
@@ -559,6 +549,12 @@ install_dnsmasq() {
 			stop_service dnsmasq
 	        start_service dnsmasq
 		fi
+		echo 'except-interface=lo' >> /etc/dnsmasq.d/smartgw-global.conf
+		cp "${BUILD_DIR}"/SmartGW/install/localdnsmasq.service /etc/systemd/system/localdnsmasq.service
+		cp "${BUILD_DIR}"/SmartGW/install/local-dnsmasq.conf /etc/local-dnsmasq.conf
+        enable_service localdnsmasq
+		stop_service localdnsmasq
+        start_service localdnsmasq
 	fi
 }
 install_lighttpd() {
@@ -581,7 +577,7 @@ install_lighttpd() {
         chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /var/cache/lighttpd/uploads
 
 		perl -pi -e 's/^server.port\s+=\s+80$/server.port = 8081/g' /etc/lighttpd/lighttpd.conf
-		#cat ${BUILD_DIR}/SmartGW/conf/{$LIGHTTPD_CFG} >> /etc/lighttpd/lighttpd.conf
+		#cat ${BUILD_DIR}/SmartGW/install/{$LIGHTTPD_CFG} >> /etc/lighttpd/lighttpd.conf
 
 		lighttpd-enable-mod fastcgi | echo ''
 		lighttpd-enable-mod fastcgi-php | echo ''
@@ -608,7 +604,7 @@ install_smartgw() {
 	#if [[ -f "/var/www/html/index.html" ]]; then
 	#	cp /var/www/html/index.html /var/www/html/index.html.${TIMENOW}
 	#}
-	#cp "${BUILD_DIR}"/SmartGW/conf/redirect-index.html /var/www/html/index.html
+	#cp "${BUILD_DIR}"/SmartGW/install/redirect-index.html /var/www/html/index.html
 
 	cp -r "${BUILD_DIR}"/SmartGW/web/* /var/www/html/smartgw
 	chown -R ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /var/www/html/smartgw/
@@ -695,14 +691,14 @@ main() {
         dep_install_list+=("${SMARTGW_WEB_DEPS[@]}")
     fi
 
-    if [[ "${INSTALL_SQUID}" == true ]]; then
-        # Install the Web dependencies
-        dep_install_list+=("${SQUID_DEPS[@]}")
-    fi
-
     if [[ "${INSTALL_DNSMASQ}" == true ]]; then
         # Install the Web dependencies
         dep_install_list+=("${DNSMASQ_DEPS[@]}")
+    fi
+
+    if [[ "${INSTALL_SQUID}" == true ]]; then
+        # Install the Web dependencies
+        dep_install_list+=("${SQUID_DEPS[@]}")
     fi
 
     if [[ "${INSTALL_SNIPROXY}" == true ]]; then
