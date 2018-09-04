@@ -149,10 +149,11 @@ function restartDNS(){
 	exec('ps -ef|grep pihole-FTL|grep -v grep', $exeout, $return);
 	if ($return == 0) {
 		exec('/usr/bin/sudo /usr/sbin/service pihole-FTL restart', $exeout, $return);	
-	}
-	exec('ps -ef|grep dnsmasq|grep -v grep', $exeout, $return);
-	if ($return == 0) {
-		exec('/usr/bin/sudo /usr/sbin/service dnsmasq restart', $exeout, $return);	
+	}else{
+		exec('ps -ef|grep dnsmasq| grep -v local-dnsmasq.conf | grep -v grep', $exeout, $return);
+		if ($return == 0) {
+			exec('/usr/bin/sudo /usr/sbin/service dnsmasq restart', $exeout, $return);	
+		}
 	}
 }
 function restartLocalDNS(){
