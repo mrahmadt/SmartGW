@@ -31,7 +31,7 @@ function UpdateSquidConf($nameserver1=null,$nameserver2=null,$disable_access_log
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
 			$content = str_replace('%nameserver2%',$nameserver2,$content);
 			if($disable_access_log){
-				$content = str_replace('#access_log none#','',$content);
+				$content = str_replace('#access_log none#','access_log none',$content);
 			}else{
 				$content = str_replace('#access_log none#','access_log /var/log/squid/access.log',$content);
 			}
