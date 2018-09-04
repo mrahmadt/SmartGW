@@ -12,6 +12,10 @@ if(isset($_GET['action']) ){
 		$logfile = '/var/log/dnsmasq-queries.log';
 	}elseif($_GET['action']=='squid'){
 		$logfile = '/var/log/squid/access.log';
+	}elseif($_GET['action']=='pihole'){
+		$logfile = '/var/log/pihole.log';
+	}elseif($_GET['action']=='pihole-FTL'){
+		$logfile = '/var/log/pihole-FTL.log';
 	}else{
 		$logfile = '/var/log/syslog';
 	}
@@ -35,4 +39,10 @@ require_once 'header.php';
 <a href="logs.php?action=dnsmasq" target="_blank" class="btn btn-info btn-block">DNS query log</a>
 <a href="logs.php?action=squid" target="_blank" class="btn btn-info btn-block">Squid access log</a>
 <a href="logs.php?action=syslog" target="_blank"  class="btn btn-info btn-block">Sys log</a>
+<?php if(file_exists('/var/log/pihole.log')) { ?>
+<a href="logs.php?action=pihole" target="_blank"  class="btn btn-info btn-block">pihole.log</a>
+<?php } ?>
+<?php if(file_exists('/var/log/pihole-FTL.log')) { ?>
+<a href="logs.php?action=pihole-FTL" target="_blank"  class="btn btn-info btn-block">pihole-FTL.log</a>
+<?php } ?>
 <?php require_once 'footer.php';?>
