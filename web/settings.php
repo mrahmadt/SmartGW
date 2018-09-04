@@ -64,29 +64,29 @@ if($_SERVER['REQUEST_METHOD']  == 'POST'){
 	}	
     $db->close();
 
-	$alert['info'] = null;
+	//$alert['info'] = null;
 	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablesquidlog'] ){
-		$alert['info'] .= "<br>UpdateSquidConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablesquidlog'];
+		//$alert['info'] .= "<br>UpdateSquidConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablesquidlog'];
 		UpdateSquidConf($myPOST['dns1ip'],$myPOST['dns2ip'],$myPOST['disablesquidlog']);
 	}
 	
 	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablednsquerylog'] ){
-		$alert['info'] .= "<br>UpdateDNSMasqConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablednsquerylog'];
+		//$alert['info'] .= "<br>UpdateDNSMasqConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablednsquerylog'];
 		UpdateDNSMasqConf($myPOST['dns1ip'],$myPOST['dns2ip'],$myPOST['disablednsquerylog']);
 	}elseif($changes['ipaddress']){
-		$alert['info'] .= "<br>UpdateDNSMasqDomains";
+		//$alert['info'] .= "<br>UpdateDNSMasqDomains";
 		UpdateDNSMasqDomains();
 	}
 	
 	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablesniproxylog'] ){
-		$alert['info'] .= "<br>UpdateSNIProxyConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablesniproxylog'];
+		//$alert['info'] .= "<br>UpdateSNIProxyConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablesniproxylog'];
 		UpdateSNIProxyConf($myPOST['dns1ip'],$myPOST['dns2ip'],$myPOST['disablesniproxylog']);
 	}
 
 	if(isset($myPOST['restartvpn']) && $myPOST['restartvpn'] == "1"){
 		if(isset($settings['vpncountrycode']) && $settings['vpncountrycode']['value']!=''){
 			$exeout = [];
-			$alert['info'] .= "<br>openpyn";
+			//$alert['info'] .= "<br>openpyn";
 			exec('/usr/bin/sudo /usr/local/bin/openpyn -k');
 			exec('/usr/bin/sudo /usr/local/bin/openpyn -d '. $settings['vpncountrycode']['value'], $exeout, $return);
 		}
