@@ -6,7 +6,7 @@ if(isset($_GET['action']) ){
 
 	if($_GET['action']=='sniproxy_access'){
 		$logfile = '/var/log/sniproxy-access.log';
-	}elseif($_GET['action']=='dnsmasq'){
+	}elseif($_GET['action']=='sniproxy_error'){
 		$logfile = '/var/log/sniproxy-error.log';
 	}elseif($_GET['action']=='dnsmasq'){
 		$logfile = '/var/log/dnsmasq-queries.log';
