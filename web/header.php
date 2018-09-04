@@ -27,10 +27,10 @@
 
 <div class="container-fluid">
 <main role="main">
-<?php if(isset($alert['success'])){?><div class="alert alert-success"><?php echo $alert['success']; ?></div><?php } ?>
+<?php if(isset($alert['success'])){?><br><div class="alert alert-success"><?php echo $alert['success']; ?></div><?php } ?>
 
-<?php if(isset($alert['info'])){?><div class="alert alert-info"><?php echo $alert['info']; ?></div><?php } ?>
+<?php if(isset($alert['info'])){?><br><div class="alert alert-info"><?php echo $alert['info']; ?></div><?php } ?>
 
-<?php if(isset($alert['warning'])){?><div class="alert alert-warning"><?php echo $alert['warning']; ?></div><?php } ?>
+<?php if(isset($alert['warning'])){?><br><div class="alert alert-warning"><?php echo $alert['warning']; ?></div><?php } ?>
 
-<?php if(isset($alert['danger'])){?><div class="alert alert-danger"><?php echo $alert['danger']; ?></div><?php } ?>
+<?php if(isset($alert['danger'])){?><br><div class="alert alert-danger"><?php echo $alert['danger']; ?></div><?php } ?>

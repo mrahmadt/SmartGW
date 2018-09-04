@@ -22,7 +22,7 @@ if(!file_exists(DATABASE_FILE)) {
 	createDATABASEFile();
 }
 
-function UpdateSquidConf($nameserver1=null,$nameserver2=null,$access_log=false){
+function UpdateSquidConf($nameserver1=null,$nameserver2=null,$disable_access_log=true){
 	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
 	if (!filter_var($nameserver2, FILTER_VALIDATE_IP)) { return false; }
 	if(file_exists('/etc/squid/smartgw.conf')) {
@@ -30,10 +30,10 @@ function UpdateSquidConf($nameserver1=null,$nameserver2=null,$access_log=false){
 		if($content){
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
 			$content = str_replace('%nameserver2%',$nameserver2,$content);
-			if($access_log){
+			if($disable_access_log){
 				$content = str_replace('#access_log none#','',$content);
 			}else{
-				$content = str_replace('#access_log none#','access_log none',$content);
+				$content = str_replace('#access_log none#','access_log /var/log/squid/access.log',$content);
 			}
 			file_put_contents('/etc/squid/smartgw.conf',$content);
 			restartSquid();
@@ -41,7 +41,7 @@ function UpdateSquidConf($nameserver1=null,$nameserver2=null,$access_log=false){
 	}
 
 }
-function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$access_log=false){
+function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$disable_access_log=true){
 	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
 	if (!filter_var($nameserver2, FILTER_VALIDATE_IP)) { return false; }
 	if(file_exists('/etc/dnsmasq.d/smartgw-global.conf')) {
@@ -50,7 +50,7 @@ function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$access_log=false
 			//exec("echo '' > /etc/dnsmasq.d/smartgw-global.conf", $exeout, $return);
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
 			$content = str_replace('%nameserver2%',$nameserver2,$content);
-			if($access_log){
+			if(!$disable_access_log){
 				exec("egrep '^log-queries'  /etc/dnsmasq.d/*", $exeout, $return);
 				if ($return != 0) {
 					$content = str_replace('#log-queries#',"log-queries",$content);
@@ -69,7 +69,7 @@ function UpdateDNSMasqConf($nameserver1=null,$nameserver2=null,$access_log=false
 	restartLocalDNS();
 	
 }
-function UpdateSNIProxyConf($nameserver1=null,$nameserver2=null,$access_log=false){
+function UpdateSNIProxyConf($nameserver1=null,$nameserver2=null,$disable_access_log=true){
 	if (!filter_var($nameserver1, FILTER_VALIDATE_IP)) { return false; }
 	if (!filter_var($nameserver2, FILTER_VALIDATE_IP)) { return false; }
 	if(file_exists('/etc/sniproxy.conf')) {
@@ -77,7 +77,7 @@ function UpdateSNIProxyConf($nameserver1=null,$nameserver2=null,$access_log=fals
 		if($content){
 			$content = str_replace('%nameserver1%',$nameserver1,$content);
 			$content = str_replace('%nameserver2%',$nameserver2,$content);			
-			if($access_log){
+			if(!$disable_access_log){
 				$content = str_replace('#access_log#',"access_log",$content);
 				$content = str_replace('#error_log#',"error_log",$content);
 			}

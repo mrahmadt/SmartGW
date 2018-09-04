@@ -64,26 +64,29 @@ if($_SERVER['REQUEST_METHOD']  == 'POST'){
 	}	
     $db->close();
 
+	$alert['info'] = null;
 	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablesquidlog'] ){
-		if($myPOST['disablesquidlog']==1) { $access_log=false; }else{ $access_log=true; }
-		UpdateSquidConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+		$alert['info'] .= "<br>UpdateSquidConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablesquidlog'];
+		UpdateSquidConf($myPOST['dns1ip'],$myPOST['dns2ip'],$myPOST['disablesquidlog']);
 	}
 	
 	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablednsquerylog'] ){
-		if($myPOST['disablednsquerylog']==1) { $access_log=false; }else{ $access_log=true; }
-		UpdateDNSMasqConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+		$alert['info'] .= "<br>UpdateDNSMasqConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablednsquerylog'];
+		UpdateDNSMasqConf($myPOST['dns1ip'],$myPOST['dns2ip'],$myPOST['disablednsquerylog']);
 	}elseif($changes['ipaddress']){
+		$alert['info'] .= "<br>UpdateDNSMasqDomains";
 		UpdateDNSMasqDomains();
 	}
 	
 	if($changes['dns1ip'] || $changes['dns2ip'] || $changes['disablesniproxylog'] ){
-		if($myPOST['disablesniproxylog']==1) { $access_log=false; }else{ $access_log=true; }
-		UpdateSNIProxyConf($myPOST['dns1ip'],$myPOST['dns2ip'],$access_log);
+		$alert['info'] .= "<br>UpdateSNIProxyConf " . $myPOST['dns1ip'] . ' , ' . $myPOST['dns2ip'] . ' , ' . $myPOST['disablesniproxylog'];
+		UpdateSNIProxyConf($myPOST['dns1ip'],$myPOST['dns2ip'],$myPOST['disablesniproxylog']);
 	}
 
 	if(isset($myPOST['restartvpn']) && $myPOST['restartvpn'] == "1"){
 		if(isset($settings['vpncountrycode']) && $settings['vpncountrycode']['value']!=''){
 			$exeout = [];
+			$alert['info'] .= "<br>openpyn";
 			exec('/usr/bin/sudo /usr/local/bin/openpyn -k');
 			exec('/usr/bin/sudo /usr/local/bin/openpyn -d '. $settings['vpncountrycode']['value'], $exeout, $return);
 		}

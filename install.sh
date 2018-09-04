@@ -462,6 +462,7 @@ install_squid() {
 		echo 'dns_nameservers 127.0.0.1' > /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/squid.conf
+		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /var/log/squid/access.log
         enable_service squid
 		stop_service squid
         start_service squid
