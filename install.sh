@@ -461,8 +461,8 @@ install_squid() {
 		fi
 		echo 'dns_nameservers 127.0.0.1' > /etc/squid/smartgw.conf
 		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/smartgw.conf
-		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/squid.conf
-		chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /var/log/squid/access.log
+		#chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /etc/squid/squid.conf
+		#chown ${LIGHTTPD_USER}:${LIGHTTPD_GROUP} /var/log/squid/access.log
         enable_service squid
 		stop_service squid
         start_service squid
@@ -551,6 +551,8 @@ install_dnsmasq() {
 	        start_service dnsmasq
 		fi
 		echo 'except-interface=lo' >> /etc/dnsmasq.d/smartgw-global.conf
+		echo 'bind-dynamic' >> /etc/dnsmasq.d/smartgw-global.conf
+		
 		cp "${BUILD_DIR}"/SmartGW/install/localdnsmasq.service /etc/systemd/system/localdnsmasq.service
 		cp "${BUILD_DIR}"/SmartGW/install/local-dnsmasq.conf /etc/local-dnsmasq.conf
         enable_service localdnsmasq
