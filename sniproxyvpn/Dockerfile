@@ -63,13 +63,13 @@ proto tls\n\
 table {\n\
 .* *\n\
 }\n\
-error_log {\n\
-filename /var/log/sniproxy-errors.log\n\
-priority debug\n\
-}\n\
-access_log {\n\
-filename /var/log/sniproxy-access.log\n\
-}\n\
+#error_log {\n\
+#filename /var/log/sniproxy-errors.log\n\
+#priority debug\n\
+#}\n\
+#access_log {\n\
+#filename /var/log/sniproxy-access.log\n\
+#}\n\
 resolver {\n\
 nameserver 127.0.0.1\n\
 mode ipv4_only\n\
