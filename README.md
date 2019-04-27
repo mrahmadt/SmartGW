@@ -51,6 +51,8 @@ VPN_DNS1=103.86.96.100
 VPN_DNS2=103.86.99.100
 #Pi-Hole web admin password
 PIHOLE_PASSWORD=pihole
+#Your server default IP
+SERVER_IP=192.168.1.100
 ```
 6. Run SmartGW docker-compose
 ``` bash
