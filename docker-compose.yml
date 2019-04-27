@@ -1,0 +1,84 @@
+version: "3"
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+services:
+  # pihole:
+  #   container_name: pihole
+  #   image: pihole/pihole:latest
+  #   ports:
+  #     - "53:53/tcp"
+  #     - "53:53/udp"
+  #     - "67:67/udp"
+  #     - "800:80/tcp"
+  #     - "4430:443/tcp"
+  #   environment:
+  #     TZ: 'America/Chicago'
+  #     WEBPASSWORD: ${PIHOLE_PASSWORD}
+  #   # Volumes store your data between container upgrades
+  #   volumes:
+  #      - etcpihole:/etc/pihole/
+  #      - etcdnsmasqd:/etc/dnsmasq.d/
+  #   dns:
+  #     - 127.0.0.1
+  #     - 1.1.1.1
+  #   # Recommended but not required (DHCP needs NET_ADMIN)
+  #   #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+  #   cap_add:
+  #     - NET_ADMIN
+  #   restart: unless-stopped
+  cpihole:
+    build:
+       context: ./cpihole
+    container_name: cpihole
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8081:80/tcp"
+      - "4431:443/tcp"
+    environment:
+      TZ: 'America/Chicago'
+      WEBPASSWORD: ${PIHOLE_PASSWORD}
+    # Volumes store your data between container upgrades
+    volumes:
+       - etcpihole:/etc/pihole/
+       - etcdnsmasqd:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+  webui:
+    build:
+      context: ./webui
+    container_name: webui
+    privileged: true
+    ports:
+      - "8080:8080/tcp"
+    environment:
+      SERVER_IP: ${SERVER_IP}
+    volumes:
+       - etcdnsmasqd:/etc/dnsmasq.d/
+    restart: unless-stopped
+  sniproxyvpn:
+    build:
+      context: ./sniproxyvpn
+    container_name: sniproxyvpn
+    privileged: true
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      VPN_USERNAME: ${VPN_USERNAME}
+      VPN_PASSWORD: ${VPN_PASSWORD}
+      VPN_OPTIONS: ${VPN_OPTIONS}
+      CIDR_NETWORK: ${CIDR_NETWORK}
+      VPN_DNS1: ${VPN_DNS1}
+      VPN_DNS2: ${VPN_DNS2}
+    restart: unless-stopped
+volumes:
+  etcpihole:
+    driver: local
+  etcdnsmasqd:
+    driver: local

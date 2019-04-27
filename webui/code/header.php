@@ -9,7 +9,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-0 pl-2">
-  <a class="navbar-brand" href="index.php">Smart Gateway</a>
+  <a class="navbar-brand" href="https://github.com/mrahmadt/SmartGW">Smart Gateway</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -18,8 +18,6 @@
           <li class="nav-item"><a class="nav-link" href="add-domain.php">Add Domain</a></li>
           <li class="nav-item"><a class="nav-link" href="domains.php">Domains</a></li>
           <li class="nav-item"><a class="nav-link" href="index.php">Status</a></li>
-          <li class="nav-item"><a class="nav-link" href="settings.php">Settings</a></li>
-          <li class="nav-item"><a class="nav-link" href="logs.php">Logs</a></li>
 		  
       </ul>
   </div>

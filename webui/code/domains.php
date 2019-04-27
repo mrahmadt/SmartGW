@@ -1,6 +1,5 @@
 <?php
 require_once 'init.php';
-settingsIsOK();
 if(isset($_GET['delete']) && is_numeric($_GET['delete']) ){
 	$db = new SQLite3(DATABASE_FILE);
 	$ret =  $db->exec('DELETE FROM domains WHERE id=' . addslashes($_GET['delete']));
@@ -30,6 +29,7 @@ require_once 'header.php';
     <thead>
       <tr>
         <th>Domain</th>
+				<th>IP</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -37,10 +37,12 @@ require_once 'header.php';
 	<?php 
 	foreach($result->data as $row){
 	$domain = strip_tags($row['domain']);
+	$ipaddress = strip_tags($row['ipaddress']);
 	$id = $row['id'];
 	?>
       <tr id="trDomain<?php echo $id;?>">
         <td><a href="http://<?php echo $domain;?>" target=_blank><?php echo $domain;?></a></td>
+				<td><?php echo $ipaddress;?></td>
         <td><a href="#" data-id="<?php echo $id;?>" class="btn btn-danger btn-sm deleteDomain">Delete</a></td>
       </tr>
 	<?php }?>
@@ -48,7 +50,7 @@ require_once 'header.php';
   </table>
 </div>
 <?php echo $Paginator->createLinks( $links, 'pagination justify-content-center' ); ?>
-<b>Important:</b> Note that domains are not automatically deleted on this page to avoid restarting the DNS service too often. instead, click on this button, to have the new settings become effective:
+<b>Important note:</b> To avoid restarting the DNS service too often, domains are not automatically removed from DNS service. Click on below button once you finish to remove the domains from your DNS service.
 <a href="domains.php?action=UpdateDNSMasqDomains" class="btn btn-info btn-block">Restart my DNS</a>
 <?php require_once 'footer.php';?>
 <script>
