@@ -11,6 +11,7 @@ SmartGW is a VPN Gateway/Proxy that allows you to route HTTP/HTTPS traffic for s
 - Access any blocked domains.
 - Use it with all your devices (Laptop, Mobiles, SmartTV...etc).
 - Utilize your full ISP network speed to access any site that you don't want it to go through the VPN tunnel.
+- Work with <a href="https://pi-hole.net/">Pi-Hole</a> for Network-wide Ad Blocking
 - More browsing privacy?.
 
 ## Features
@@ -34,19 +35,36 @@ The setup is straightforward, you need a Linux server, and a <a href="http://nor
 2. Set a static IP in your server.
 3. Install Docker.
 4. Download SmartGW source code.
-3. Run SmartGW docker-compose
+5. Rename example.env to .env and change the variables
+```
+#Your NordVPN Username
+VPN_USERNAME=yourUsername@nordvpn.com
+#Your NordVPN Password
+VPN_PASSWORD=yourNordvpnPassword
+#VPN country
+VPN_OPTIONS=us
+#Local network CIDR network
+CIDR_NETWORK=192.168.1.0/24
+#No need to change this
+VPN_DNS1=103.86.96.100
+#No need to change this
+VPN_DNS2=103.86.99.100
+#Pi-Hole web admin password
+PIHOLE_PASSWORD=pihole
+```
+6. Run SmartGW docker-compose
 ``` bash
 docker-compose up
 ```
-4. Open your browser and type your SmartGW IP (port 8080) (http://Your-Server-IP:8080/) and start adding your domains (e.g., yahoo.com).
-5. Define SmartGW IP address as the only DNS entry in the router.
+7. Open your browser and type your SmartGW IP (port 8080) (http://Your-Server-IP:8080/) and start adding your domains (e.g., yahoo.com).
+8. Define SmartGW IP address as the only DNS entry in the router.
 ```
 Login to your router’s configuration page and find the DHCP/DNS settings. 
 Note: make sure you adjust this setting under your LAN settings and not the WAN.
 ```
 ![6e475c318358d8266052015e28841a72b3cc3b84](https://user-images.githubusercontent.com/957921/44320410-9cccc200-a44a-11e8-88fe-570d01eb2e93.png)
 
-6. Enjoy!.
+Enjoy!.
 
 ## Screenshots
 ![Screen Shot 2019-04-27 at 3 57 54 AM](https://user-images.githubusercontent.com/957921/56842702-fc645280-68a0-11e9-83df-0a9c4089a87e.png)
