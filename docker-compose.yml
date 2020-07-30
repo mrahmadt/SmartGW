@@ -10,6 +10,7 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
+      - "68:68/udp"
       - "8081:80/tcp"
       - "4431:443/tcp"
     environment:
