@@ -1,6 +1,6 @@
 # SmartGW
 
-SmartGW is a VPN Gateway/Proxy that allows you to route HTTP/HTTPS traffic for specific internet domains to go through VPN tunnel while keeping the other traffic goes through your ISP gateway and in the same time it use [Pi-Hole](https://pi-hole.net/) to perform Network-wide Ad Blocking (you have the choice to disable it)
+SmartGW is a VPN Gateway/Proxy that allows you to route HTTP/HTTPS traffic for specific internet domains to go through VPN tunnel while keeping the other traffic goes through your ISP gateway and in the same time, use [Pi-Hole](https://pi-hole.net/) to perform Network-wide Ad Blocking (you have the choice to disable it)
 
 **Example:**
 - HTTP/HTTPS for **netflix.com** (from all devices in your network) --> Will go through your **VPN tunnel**.
@@ -28,7 +28,7 @@ SmartGW is a VPN Gateway/Proxy that allows you to route HTTP/HTTPS traffic for s
 The setup is straightforward, you need a Linux server, and a [NordVPN](http://nordvpn.com) VPN subscription.
 
 ## What Do I need to start?
-1. Linux server (any old PC or [single-board](https://en.wikipedia.org/wiki/Single-board_computer) such us [Raspberry Pi](https://www.raspberrypi.org) will work).
+1. Linux server (any old PC or [single-board](https://en.wikipedia.org/wiki/Single-board_computer) such as [Raspberry Pi](https://www.raspberrypi.org) will work).
 2. [NordVPN](http://nordvpn.com) VPN subscription.
 3. Static IP in your local network.
 4. [Docker engine](https://docker.com/) with basic know how.
@@ -91,6 +91,10 @@ Note: make sure you adjust this setting under your LAN settings and not the WAN.
 Enjoy!.
 
 ## Screenshots
-![Screen Shot 2019-04-27 at 3 57 54 AM](https://user-images.githubusercontent.com/957921/56842702-fc645280-68a0-11e9-83df-0a9c4089a87e.png)
-![Screen Shot 2019-04-27 at 3 58 13 AM](https://user-images.githubusercontent.com/957921/56842707-fff7d980-68a0-11e9-975b-1e81e1bc6133.png)
+
+![Pi-hole_Screenshot](https://user-images.githubusercontent.com/957921/88934822-beb35e00-d289-11ea-9486-69d61e473124.png)
+
+
+![Capture](https://user-images.githubusercontent.com/957921/88934645-8e6bbf80-d289-11ea-98c6-b5d8b16a482d.PNG)
+
 .
