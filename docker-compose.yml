@@ -24,7 +24,8 @@ services:
       - 1.1.1.1
     cap_add:
       - NET_ADMIN
-    network_mode: host
+      - NET_BROADCAST
+    #network_mode: host
     restart: unless-stopped
   sniproxyvpn:
     build:
