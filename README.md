@@ -75,7 +75,7 @@ docker-compose up -d
 
 ```
 
-7. Open your browser and type your Pi-Hole IP (port 8081) (http://Your-Server-IP:8081/), login, and start adding your domains under "Local DNS Records" tab (IP should be your server IP).
+7. Open your browser and type your Pi-Hole IP (port 8081) (http://Your-Server-IP:8081/admin/), login, and start adding your domains under "Local DNS Records" tab (IP should be your server IP).
 8. Define SmartGW IP address as the only DNS entry in the router.
 
 ```
